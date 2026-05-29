@@ -1,0 +1,1879 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/uicons-regular-rounded/css/uicons-regular-rounded.css">
+
+  <style>
+    .navbar {
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      height: 44px;
+
+      padding: 0 14px;
+
+      background: white;
+
+      border: 3px solid var(--border);
+
+      border-radius: 16px;
+
+      margin: 0 0px 16px 0px;
+
+      box-shadow: var(--shadow);
+    }
+
+    /* left side */
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+    }
+
+    /* right side */
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* logo */
+
+    .logo {
+      font-weight: 700;
+      font-size: 16px;
+    }
+
+    /* nav buttons */
+
+    .nav-btn {
+
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      padding: 4px 10px;
+
+      font-size: 13px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      background: white;
+
+      text-decoration: none;
+      color: var(--text);
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* icon button */
+
+    .nav-btn.icon {
+
+      width: 28px;
+      height: 28px;
+
+      justify-content: center;
+      padding: 0;
+    }
+
+    .nav-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* ================= ROOT THEME ================= */
+
+    :root {
+      --bg: #f6f7f9;
+      --card: #ffffff;
+      --text: #222;
+      --border: #111;
+
+      --radius: 10px;
+      --radius-lg: 14px;
+      --radius-sm: 6px;
+
+      --shadow: 3px 3px 0px #000;
+      --shadow-sm: 2px 2px 0px #000;
+      --shadow-lg: 4px 4px 0px #000;
+
+      --transition: 0.15s ease;
+    }
+
+    /* ================= GLOBAL ================= */
+
+    body {
+      margin: 0;
+      font-family: system-ui, Segoe UI;
+
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+
+      height: 100vh;
+      overflow: hidden;
+
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ================= SIDEBAR ================= */
+
+    .sidebar {
+      width: 280px;
+      padding: 16px;
+      overflow-y: auto;
+
+      background: var(--card);
+      border: 3px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow);
+
+      margin: 16px 0px 16px 8px;
+    }
+
+    .sidebar.collapsed {
+      width: 0;
+      padding: 0;
+      margin: 0;
+      overflow: hidden;
+    }
+
+    .sidebar-toggle {
+
+      width: 32px;
+      height: 32px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+      margin-right: 10px;
+
+    }
+
+    .sidebar-toggle:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* ================= SUBJECT ================= */
+
+    .subject {
+      padding: 12px;
+      margin-bottom: 14px;
+
+      background: white;
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius);
+
+      box-shadow: var(--shadow-sm);
+
+      transition: var(--transition);
+    }
+
+    /* SUBJECT COLOR VARIATIONS */
+
+    .subject:nth-child(1) {
+      background: #fff8e6;
+    }
+
+    .subject:nth-child(2) {
+      background: #e8f7ff;
+    }
+
+    .subject:nth-child(3) {
+      background: #f4eaff;
+    }
+
+    .subject:nth-child(4) {
+      background: #eaffea;
+    }
+
+    .subject:nth-child(5) {
+      background: #ffecec;
+    }
+
+    .subject:nth-child(6) {
+      background: #fff0f7;
+    }
+
+    .subject:nth-child(7) {
+      background: #eef9ff;
+    }
+
+    .subject:nth-child(8) {
+      background: #fffde8;
+    }
+
+    .subject:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    .subject-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .subject-header h4 {
+      margin: 0;
+      font-weight: 600;
+    }
+
+    .subject-header button {
+      background: white;
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 8px;
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ================= NOTES LINKS ================= */
+
+    .note-link {
+      display: block;
+      position: relative;
+
+      padding: 8px 10px;
+      margin-bottom: 6px;
+
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+
+      background: white;
+
+      box-shadow: var(--shadow-sm);
+
+      text-decoration: none;
+      color: var(--text);
+
+      transition: var(--transition);
+    }
+
+    .note-link:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    .note-delete {
+
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+
+      opacity: 0;
+
+      width: 22px;
+      height: 22px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 50%;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+      font-size: 12px;
+      line-height: 1;
+
+    }
+
+    .note-link:hover .note-delete {
+      opacity: 1;
+    }
+
+    /* ================= MAIN ================= */
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      padding: 16px;
+    }
+
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+
+      padding: 16px;
+
+      overflow: hidden;
+    }
+
+    /* ================= TOP BAR ================= */
+
+    .top-bar {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+
+      padding: 12px;
+
+      background: white;
+      border: 3px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow);
+
+      margin-bottom: 16px;
+    }
+
+    .top-bar input {
+      flex: 1;
+
+      padding: 8px 10px;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      background: white;
+    }
+
+    /* ================= BUTTONS ================= */
+
+    button {
+      padding: 6px 12px;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+      transition: var(--transition);
+    }
+
+    button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* ================= NOTE CARD ================= */
+
+    .note-card {
+      flex: 1;
+      overflow-y: auto;
+
+      background: white;
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow-lg);
+
+      padding: 20px;
+    }
+
+    .note-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* ================= BLOCK ================= */
+
+    /* TEXT BLOCKS */
+
+    .block {
+      position: relative;
+
+      margin-bottom: 14px;
+      padding: 8px;
+
+      background: white;
+
+      border: none;
+      box-shadow: none;
+    }
+
+    .block textarea {
+
+      width: 100%;
+
+      border: none;
+      outline: none;
+
+      resize: none;
+
+      font-family: inherit;
+      font-size: 16px;
+
+      background: white;
+
+      overflow: hidden;
+      /* prevents scrollbars */
+
+    }
+
+    .block-delete {
+
+      position: absolute;
+
+      top: 8px;
+      right: 8px;
+
+      width: 26px;
+      height: 26px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 50%;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+      opacity: 0;
+      transition: 0.15s;
+
+    }
+
+    .block:hover .block-delete {
+      opacity: 1;
+    }
+
+    /* ================= IMAGES ================= */
+
+    /* IMAGE BLOCK */
+
+    .image-wrapper {
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+
+    .note-image {
+      width: 100%;
+
+      border: 3px solid var(--border);
+      border-radius: 10px;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .resize-handle {
+      width: 12px;
+      height: 12px;
+      background: black;
+
+      position: absolute;
+      bottom: 0;
+      right: 0;
+
+      cursor: se-resize;
+    }
+
+    /* ================= TASK BLOCK ================= */
+
+    .task-block {
+
+      border: 3px solid var(--border);
+      border-radius: 10px;
+
+      padding: 12px;
+
+      background: white;
+
+      box-shadow: var(--shadow);
+
+    }
+
+    .task-card {
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      gap: 10px;
+
+      padding: 8px 10px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      box-shadow: var(--shadow-sm);
+
+      margin-bottom: 8px;
+
+    }
+
+    .task-card span {
+      flex: 1;
+      word-break: break-word;
+    }
+
+    .task-delete {
+
+      width: 24px;
+      height: 24px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 50%;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+    }
+
+    .task-card.completed {
+      opacity: 0.5;
+      text-decoration: line-through;
+    }
+
+    .task-card:nth-child(1) {
+      background: #fff0f0;
+    }
+
+    .task-card:nth-child(2) {
+      background: #f0fff4;
+    }
+
+    .task-card:nth-child(3) {
+      background: #f0f7ff;
+    }
+
+    .task-card:nth-child(4) {
+      background: #fffaf0;
+    }
+
+    .task-card:nth-child(5) {
+      background: #f6f0ff;
+    }
+
+    .task-card:nth-child(6) {
+      background: #f0ffff;
+    }
+
+    .task-card:nth-child(7) {
+      background: #fff6e8;
+    }
+
+    .task-card:nth-child(8) {
+      background: #f3fff0;
+    }
+
+    .task-header {
+
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      margin-bottom: 10px;
+
+    }
+
+    .task-input {
+
+      width: 100%;
+
+      padding: 8px 10px;
+
+      margin-top: 8px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      font-size: 14px;
+
+      background: white;
+
+      box-sizing: border-box;
+
+    }
+
+    .task-input:focus {
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ================= TABLE ================= */
+
+    .table-wrapper {
+      margin-top: 12px;
+      overflow-x: auto;
+    }
+
+    .note-table {
+      width: 100%;
+      border-collapse: collapse;
+
+      border: 3px solid var(--border);
+    }
+
+    .note-table td {
+      border: 2px solid var(--border);
+      padding: 6px;
+    }
+
+    .note-table input {
+      width: 100%;
+      border: none;
+      outline: none;
+      background: white;
+    }
+
+    /* ================= WHITEBOARD ================= */
+
+    .whiteboard-container {
+      margin-top: 16px;
+      padding: 16px;
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius);
+
+      background: white;
+
+      box-shadow: var(--shadow);
+    }
+
+    .wb-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .wb-toolbar button {
+      border: 2px solid var(--border);
+      background: white;
+    }
+
+    .wb-toolbar button.active {
+      background: #eaeaea;
+    }
+
+    /* ================= DRAG HANDLE ================= */
+
+    .drag-bar {
+
+      position: absolute;
+
+      bottom: -10px;
+      left: 50%;
+
+      transform: translateX(-50%);
+
+      width: 70px;
+      height: 12px;
+
+      background: white;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      cursor: grab;
+
+      opacity: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+    }
+
+    .block:hover .drag-bar {
+      opacity: 1;
+    }
+
+    /* ================= MODALS ================= */
+
+    .modal {
+      display: none;
+
+      position: fixed;
+      inset: 0;
+
+      background: rgba(0, 0, 0, 0.3);
+
+      justify-content: center;
+      align-items: center;
+
+      z-index: 999;
+    }
+
+    .modal-content {
+
+      position: relative;
+
+      background: white;
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow-lg);
+
+      padding: 20px;
+
+      width: 800px;
+      max-width: 90vw;
+
+      max-height: 85vh;
+      /* limit height */
+
+      overflow-y: auto;
+      /* enable scrolling */
+
+    }
+
+    .modal input {
+      width: 100%;
+      padding: 8px;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      margin-bottom: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+
+      width: 28px;
+      height: 28px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+      background: white;
+
+      font-weight: bold;
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* ================= API CARDS ================= */
+
+    /* API GRID */
+
+    #apiResults {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    /* API CARDS */
+
+    .api-card {
+      padding: 12px;
+
+      border: 3px solid var(--border);
+      border-radius: 12px;
+
+      box-shadow: var(--shadow-sm);
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* random pastel colors */
+
+    .api-card:nth-child(1) {
+      background: #fff0f0;
+    }
+
+    .api-card:nth-child(2) {
+      background: #f0fff4;
+    }
+
+    .api-card:nth-child(3) {
+      background: #f0f7ff;
+    }
+
+    .api-card:nth-child(4) {
+      background: #fffaf0;
+    }
+
+    .api-card:nth-child(5) {
+      background: #f6f0ff;
+    }
+
+    .api-card:nth-child(6) {
+      background: #f0ffff;
+    }
+
+    .api-card:nth-child(7) {
+      background: #fff6e8;
+    }
+
+    .api-card:nth-child(8) {
+      background: #f3fff0;
+    }
+
+    .api-card img {
+      width: 100%;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .api-card button {
+      margin-top: auto;
+    }
+
+    .api-card img {
+
+      width: 100%;
+      height: 120px;
+
+      object-fit: cover;
+
+      border-radius: 8px;
+
+      margin-bottom: 8px;
+
+    }
+
+    /* ================= FLASHCARD ================= */
+
+    .flashcard-popup {
+      display: none;
+
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius);
+
+      background: white;
+
+      padding: 16px;
+
+      box-shadow: var(--shadow-lg);
+
+      z-index: 9999;
+    }
+
+    .flashcard-popup input,
+    .flashcard-popup textarea {
+      width: 100%;
+      margin-top: 6px;
+      margin-bottom: 8px;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      padding: 6px;
+    }
+
+    /* mini-tool bar*/
+    /* MINI TOOLBAR */
+
+    .mini-toolbar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      padding: 6px 10px;
+
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      background: white;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-toolbar button {
+
+      width: 36px;
+      height: 36px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 16px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      background: white;
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+    }
+
+    .mini-toolbar button:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    .command-bar {
+
+      display: flex;
+      align-items: center;
+
+      gap: 12px;
+
+      padding: 10px 12px;
+
+      border: 3px solid var(--border);
+      border-radius: 12px;
+
+      background: white;
+
+      box-shadow: var(--shadow);
+
+      margin-bottom: 16px;
+
+    }
+
+    /* search */
+
+    .command-bar input {
+
+      flex: 1;
+
+      padding: 8px 10px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      font-size: 14px;
+    }
+
+    /* actions */
+
+    .command-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* icon buttons */
+
+    .command-actions button {
+
+      width: 36px;
+      height: 36px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      font-size: 16px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      background: white;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+    }
+
+    .command-actions button:hover {
+
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+
+    }
+
+    /*ai*/
+    .ask-ai-btn {
+      position: absolute;
+      right: 40px;
+      top: 8px;
+
+      border: 2px solid var(--border);
+      background: white;
+
+      border-radius: 6px;
+      padding: 2px 8px;
+
+      font-size: 12px;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+      opacity: 0;
+    }
+
+    .block:hover .ask-ai-btn {
+      opacity: 1;
+    }
+
+    /* ================= AI SIDEBAR ================= */
+
+    /* ================= AI SIDEBAR ================= */
+
+    .ai-popup {
+
+      width: 360px;
+
+      height: calc(100vh - 32px);
+
+      margin: 16px 8px 16px 0;
+
+      background: var(--card);
+
+      border: 3px solid var(--border);
+
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow-lg);
+
+      display: flex;
+      flex-direction: column;
+
+      overflow: hidden;
+
+      animation: aiSidebarSlide 0.25s ease;
+
+    }
+
+    /* slide animation */
+
+    @keyframes aiSidebarSlide {
+
+      from {
+        transform: translateX(100%);
+      }
+
+      to {
+        transform: translateX(0);
+      }
+
+    }
+
+    /* ================= PANEL ================= */
+
+    .ai-popup-box {
+
+      display: flex;
+      flex-direction: column;
+
+      height: 100%;
+
+      padding: 16px;
+
+    }
+
+    /* ================= CLOSE ================= */
+
+    .popup-close {
+
+      position: absolute;
+
+      right: 12px;
+      top: 12px;
+
+      width: 28px;
+      height: 28px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 2px solid var(--border);
+      border-radius: 6px;
+
+      background: white;
+
+      font-size: 14px;
+
+      cursor: pointer;
+
+      box-shadow: var(--shadow-sm);
+
+    }
+
+    .popup-close:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+    }
+
+    /* ================= AI TEXT AREA ================= */
+
+    .ai-popup-text {
+
+      flex: 1;
+
+      overflow-y: auto;
+
+      margin-top: 32px;
+
+      padding-right: 6px;
+
+    }
+
+    /* custom scrollbar */
+
+    .ai-popup-text::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .ai-popup-text::-webkit-scrollbar-thumb {
+      background: #ccc;
+      border-radius: 4px;
+    }
+
+    /* ================= CHAT MESSAGE ================= */
+
+    .ai-popup-text p,
+    .ai-popup-text li {
+
+      padding: 8px 10px;
+
+      margin-bottom: 8px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      background: #f9f9f9;
+
+      box-shadow: var(--shadow-sm);
+
+    }
+
+    /* headings */
+
+    .ai-popup-text h1,
+    .ai-popup-text h2,
+    .ai-popup-text h3,
+    .ai-popup-text h4 {
+
+      margin-top: 16px;
+      margin-bottom: 6px;
+
+    }
+
+    /* code */
+
+    .ai-popup-text pre {
+
+      background: #111;
+      color: #eee;
+
+      padding: 10px;
+
+      border-radius: 8px;
+
+      overflow-x: auto;
+
+      margin-bottom: 10px;
+
+    }
+
+    /* ================= RESULTS ================= */
+
+    .image-grid,
+    .video-grid {
+
+      display: grid;
+
+      grid-template-columns: 1fr 1fr;
+
+      gap: 10px;
+
+      margin-top: 10px;
+
+    }
+
+    .image-card,
+    .video-card {
+
+      border: 2px solid var(--border);
+      border-radius: 10px;
+
+      background: white;
+
+      box-shadow: var(--shadow-sm);
+
+      padding: 6px;
+
+      display: flex;
+      flex-direction: column;
+
+    }
+
+    .image-card img,
+    .video-card img {
+
+      width: 100%;
+      border-radius: 6px;
+
+      margin-bottom: 6px;
+
+    }
+
+    .image-card button,
+    .video-card button {
+
+      margin-top: auto;
+
+      font-size: 12px;
+
+    }
+
+    /* ================= INSERT ACTIONS ================= */
+
+    .ai-insert-actions {
+
+      margin-top: 10px;
+
+      display: flex;
+      gap: 8px;
+
+    }
+
+    /* ================= LOADING SPINNER ================= */
+
+    .ai-loading {
+
+      display: flex;
+      align-items: center;
+      gap: 6px;
+
+      font-size: 14px;
+
+    }
+
+    .ai-loading::after {
+
+      content: "";
+
+      width: 14px;
+      height: 14px;
+
+      border: 2px solid #ccc;
+      border-top: 2px solid #111;
+
+      border-radius: 50%;
+
+      animation: aiSpin 0.7s linear infinite;
+
+    }
+
+    @keyframes aiSpin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* ================= TYPING DOTS ================= */
+
+    .ai-typing {
+
+      display: flex;
+      gap: 4px;
+
+      padding: 8px;
+
+    }
+
+    .ai-typing span {
+
+      width: 6px;
+      height: 6px;
+
+      background: #333;
+
+      border-radius: 50%;
+
+      animation: aiTyping 1.2s infinite;
+
+    }
+
+    .ai-typing span:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+
+    .ai-typing span:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+
+    @keyframes aiTyping {
+
+      0% {
+        opacity: 0.2;
+        transform: translateY(0);
+      }
+
+      50% {
+        opacity: 1;
+        transform: translateY(-4px);
+      }
+
+      100% {
+        opacity: 0.2;
+        transform: translateY(0);
+      }
+
+    }
+
+    /*-----------video------*/
+    .video-block {
+
+      border: 2px solid var(--border);
+      border-radius: 12px;
+
+      padding: 12px;
+
+      display: flex;
+      gap: 12px;
+
+      align-items: center;
+
+    }
+
+    .video-thumb {
+
+      width: 120px;
+      border-radius: 8px;
+
+    }
+
+    .video-actions button {
+
+      background: var(--primary);
+      border: none;
+
+      padding: 6px 10px;
+      border-radius: 6px;
+
+      cursor: pointer;
+
+    }
+
+    .video-popup {
+      position: fixed;
+      inset: 0;
+
+      background: rgba(0, 0, 0, 0.4);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      z-index: 500;
+    }
+
+    /* popup container */
+
+    .video-popup-box {
+
+      width: 1100px;
+      max-width: 95vw;
+      height: 650px;
+
+      background: white;
+
+      border: 3px solid var(--border);
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow-lg);
+
+      padding: 18px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* layout */
+
+    .video-layout {
+      display: flex;
+      gap: 18px;
+      flex: 1;
+    }
+
+    /* video */
+
+    .video-player {
+      flex: 2;
+    }
+
+    .video-player iframe {
+      width: 100%;
+      height: 100%;
+      border: 3px solid var(--border);
+      border-radius: 10px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* notes panel */
+
+    .video-notes {
+
+      flex: 1;
+
+      border: 3px solid var(--border);
+      border-radius: 10px;
+
+      box-shadow: var(--shadow-sm);
+
+      padding: 10px;
+
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-notes h3 {
+      margin: 0 0 6px 0;
+    }
+
+    /* textarea */
+
+    .video-notes textarea {
+
+      width: 100%;
+      height: 90px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      padding: 6px;
+
+      resize: none;
+
+      font-family: inherit;
+    }
+
+    /* add button */
+
+    .video-notes button {
+
+      margin-top: 6px;
+    }
+
+    /* notes list */
+
+    #videoNotesList {
+
+      margin-top: 10px;
+
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    /* note item */
+
+    .video-note {
+
+      padding: 6px 8px;
+
+      border: 2px solid var(--border);
+      border-radius: 8px;
+
+      box-shadow: var(--shadow-sm);
+
+      margin-bottom: 6px;
+
+      cursor: pointer;
+
+      background: white;
+    }
+
+    .video-note:hover {
+
+      transform: translate(-2px, -2px);
+      box-shadow: var(--shadow);
+
+    }
+
+    /* timestamp style */
+
+    .video-note b {
+
+      margin-right: 6px;
+
+    }
+
+    .ai-popup {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 420px;
+      height: 600px;
+      z-index: 999;
+    }
+
+    .ai-popup-box {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .15);
+    }
+
+    .ai-popup-header {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .ai-popup-messages {
+      flex: 1;
+      overflow: auto;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ai-msg.user {
+      align-self: flex-end;
+    }
+
+    .ai-msg.ai {
+      align-self: flex-start;
+    }
+
+    .ai-bubble {
+      padding: 10px;
+      border-radius: 10px;
+      background: #f1f1f1;
+      max-width: 80%;
+    }
+
+    .ai-msg.user .ai-bubble {
+      background: #63d4c3;
+    }
+
+    .ai-popup-input {
+      display: flex;
+      gap: 8px;
+      padding: 10px;
+      border-top: 1px solid #eee;
+    }
+
+    .ai-popup-input textarea {
+      flex: 1;
+      resize: none;
+    }
+
+    #commandPopup {
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  width: 260px;
+  max-height: 220px;
+  overflow-y: auto;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.command-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:8px 10px;
+  cursor:pointer;
+  color:white;
+}
+
+.command-item:hover{
+  background:#2b2b2b;
+}
+
+.command-item i{
+  font-size:14px;
+}
+
+.cmd-text{
+  display:flex;
+  flex-direction:column;
+  font-size:13px;
+}
+
+.cmd-text span{
+  font-size:11px;
+  opacity:0.6;
+}
+
+.ai-bubble.loading {
+  display: flex;
+  gap: 6px;
+  padding: 10px;
+}
+
+.ai-bubble.loading .dot {
+  width: 8px;
+  height: 8px;
+  background: #999;
+  border-radius: 50%;
+  animation: bounce 1.4s infinite;
+}
+
+.ai-bubble.loading .dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.ai-bubble.loading .dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(0.6);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+  </style>
+</head>
+
+<body>
+
+  <!-- ================= SIDEBAR ================= -->
+  <div class="sidebar glass" id="sidebar">
+
+    <!-- GLOBAL -->
+    <div class="subject">
+      <div class="subject-header">
+        <h4>Global</h4>
+        <button onclick="openCreateModal('')">+</button>
+      </div>
+
+      <% groupedNotes["global"].forEach(note=> { %>
+        <div class="note-link">
+          <span onclick="loadNote('<%= note.noteId %>')" style="cursor:pointer;">
+            <%= note.title %>
+          </span>
+          <button class="note-delete" onclick="deleteNote('<%= note.noteId %>')">✕</button>
+        </div>
+        <% }) %>
+    </div>
+
+    <!-- ALL SUBJECTS -->
+    <% subjects.forEach(subject=> { %>
+      <div class="subject">
+        <div class="subject-header">
+          <h4>
+            <%= subject.name %>
+          </h4>
+          <button onclick="openCreateModal('<%= subject.subjectId %>')">+</button>
+        </div>
+
+        <div class="notes-container">
+          <% groupedNotes[subject.subjectId].forEach(note=> { %>
+            <div class="note-link">
+              <span onclick="loadNote('<%= note.noteId %>')" style="cursor:pointer;">
+                <%= note.title %>
+              </span>
+              <button class="note-delete" onclick="deleteNote('<%= note.noteId %>')">✕</button>
+            </div>
+            <% }) %>
+        </div>
+      </div>
+      <% }) %>
+
+  </div>
+
+  <!-- ================= MAIN ================= -->
+
+  <div class="main">
+
+    <div class="navbar" id="navbar">
+
+      <div class="nav-left">
+
+        <button class="sidebar-toggle" onclick="toggleSidebar()">
+          <i class="fi fi-rr-menu-burger"></i>
+        </button>
+
+        <div class="logo">StudyMate</div>
+
+      </div>
+
+      <div class="nav-right">
+
+        <a href="/notes" class="nav-btn">
+          <i class="fi fi-rr-document"></i>
+          Notes
+        </a>
+
+        <a href="/flashcards" class="nav-btn">
+          <i class="fi fi-rr-cards-blank"></i>
+          Flashcards
+        </a>
+
+        <a href="/tasks" class="nav-btn">
+          <i class="fi fi-rr-list-check"></i>
+          Tasks
+        </a>
+
+        <a href="/settings" class="nav-btn icon">
+          <i class="fi fi-rr-settings"></i>
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="command-bar">
+
+      <input type="text" id="commandInput" placeholder="Search notes, APIs or type commands…">
+
+      <div class="command-actions">
+
+        <button onclick="saveWholeNote()" title="Save">
+          <i class="fi fi-rr-disk"></i>
+        </button>
+
+        <button onclick="addTextBlock()" title="Add Block">
+          <i class="fi fi-rr-plus"></i>
+        </button>
+
+        <button onclick="openImageModal()" title="Image">
+          <i class="fi fi-rr-picture"></i>
+        </button>
+
+        <button onclick="addWhiteboard()" title="Whiteboard">
+          <i class="fi fi-rr-pencil"></i>
+        </button>
+
+        <button onclick="searchApis()" title="Search API">
+          <i class="fi fi-rr-search"></i>
+        </button>
+
+        <button onclick="runAI()" title="AI">
+          <i class="fi fi-rr-robot"></i>
+        </button>
+
+      </div>
+
+    </div>
+
+
+    <div class="note-card glass">
+      <div class="note-title" id="noteTitle">Select a note</div>
+      <div id="blocksContainer"></div>
+    </div>
+
+  </div>
+
+
+  <!-- ================= CREATE NOTE MODAL ================= -->
+  <div class="modal" id="createModal">
+    <div class="modal-content glass">
+      <span class="close-btn" onclick="closeModal('createModal')">✖</span>
+      <h3>Create Note</h3>
+      <form action="/notes/create" method="POST">
+        <input type="text" name="title" required style="width:100%;margin-bottom:10px;">
+        <input type="hidden" name="subjectId" id="modalSubjectId">
+        <button type="submit" class="glass-btn">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ================= IMAGE MODAL ================= -->
+  <div class="modal" id="imageModal">
+    <div class="modal-content glass">
+      <span class="close-btn" onclick="closeModal('imageModal')">✖</span>
+      <h3>Upload Image</h3>
+      <input type="file" id="imageInput">
+      <button onclick="uploadImage()" class=>Upload</button>
+    </div>
+  </div>
+
+  <!-- ================= API MODAL ================= -->
+  <div class="modal" id="apiModal">
+    <div class="modal-content glass">
+      <span class="close-btn" onclick="closeModal('apiModal')">✖</span>
+      <h3>API Results</h3>
+      <div id="apiResults"></div>
+    </div>
+  </div>
+
+  <!--==================flashcards==================-->
+  <div id="flashcardPopup" class="flashcard-popup">
+
+    <div class="flashcard-box">
+
+      <label>Question</label>
+      <input type="text" id="flashcardQuestion" placeholder="Enter question">
+
+      <label>Answer</label>
+      <textarea id="flashcardAnswer" rows="3"></textarea>
+
+      <div class="flashcard-actions">
+        <button onclick="saveFlashcard()">Save</button>
+        <button onclick="closeFlashcardPopup()">Cancel</button>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="flashcardToolbar" class="flashcard-toolbar"></div>
+  <div id="flashcardPopup" class="flashcard-popup">
+    <input type="text" id="flashcardQuestion" placeholder="Enter question">
+    <textarea id="flashcardAnswer" placeholder="Answer"></textarea>
+    <button onclick="saveFlashcard()">Save</button>
+    <button onclick="closeFlashcardPopup()">Cancel</button>
+  </div>
+
+  <script src="/scripts/Notes/aiNotes.js"></script>
+  <Script src="/scripts/Notes/notes.js"></Script>
+  <script src="/scripts/Notes/whiteboard.js"></script>
+  <script src="/scripts/Notes/table.js"></script>
+  <script src="/scripts/Notes/notesVideo.js"></script>
+  <script src="/scripts/Notes/notesCommand.js"></script>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://www.youtube.com/iframe_api"></script>
+
+</body>
+
+</html>

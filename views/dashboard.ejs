@@ -1,0 +1,911 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>StudyMate Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/css/ui-kit.css">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* BACKGROUND */
+
+    body {
+      background: #f5f6f8;
+      overflow-x: hidden;
+    }
+
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      background: url('/img/dashoard2.jpg') center center no-repeat;
+      background-size: 100%;
+      filter: blur(10px) brightness(0.7);
+      z-index: -1;
+    }
+
+    body:not(.image-mode) .bg-layer {
+      background: #c5c6c7;
+      filter: none;
+    }
+
+    /* NAVBAR */
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      padding: 15px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      border-bottom: 2px solid var(--border);
+      box-shadow: var(--shadow);
+      z-index: 1000;
+    }
+
+    /* SEARCH */
+
+    .search-bar {
+
+      margin-top: 90px;
+
+      width: 65%;
+
+      margin-left: auto;
+      margin-right: auto;
+
+      display: flex;
+      gap: 10px;
+
+      padding: 10px;
+
+      background: white;
+
+      border: 2px solid var(--border);
+
+      border-radius: 40px;
+
+      box-shadow: var(--shadow-sm);
+
+      align-items: center;
+
+    }
+
+    /* HERO */
+
+    .hero {
+      margin: 40px auto;
+      width: 90%;
+      padding: 60px;
+      text-align: center;
+    }
+
+    /* SECTIONS */
+
+    .section {
+      width: 90%;
+      margin: 40px auto;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    /* CARD */
+
+    .card {
+      min-height: 260px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* ADD CARD */
+
+    .add-card {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 40px;
+      cursor: pointer;
+      opacity: 0.7;
+    }
+
+    .add-card:hover {
+      opacity: 1;
+    }
+
+    /* NOTES PANEL */
+
+    .notes-panel {
+      width: 95%;
+      min-height: 70vh;
+      margin: 60px auto;
+      padding: 40px;
+    }
+
+    .notes-panel textarea {
+      width: 100%;
+      height: 60vh;
+    }
+
+    /* MODAL */
+
+    .modal {
+
+      position: fixed;
+
+      top: 0;
+      left: 0;
+
+      width: 100%;
+      height: 100%;
+
+      display: none;
+
+      align-items: center;
+      justify-content: center;
+
+      background: rgba(0, 0, 0, 0.45);
+
+      z-index: 2000;
+
+    }
+
+    .modal-content {
+
+      background: var(--card);
+
+
+      border: 2px solid var(--border);
+
+      border-radius: var(--radius-lg);
+
+      box-shadow: var(--shadow-lg);
+
+      padding: 25px;
+
+    }
+
+    /* CHAT */
+
+    .chat-area {
+      height: 300px;
+      overflow-y: auto;
+      margin-bottom: 15px;
+    }
+
+    .chat-message {
+      margin-bottom: 10px;
+    }
+
+    /* API GRID */
+
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 18px;
+    }
+
+    .api-card {
+      display: flex;
+      flex-direction: column;
+      height: 320px;
+    }
+
+    .api-card img {
+      height: 130px;
+      object-fit: cover;
+    }
+
+    /* TASKS */
+
+    .task-grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .task-card {
+      width: 220px;
+      height: 320px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: #eee;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-top: auto;
+    }
+
+    .progress-bar div {
+      height: 100%;
+      background: var(--primary);
+    }
+
+    .search-bar .input {
+      border: none;
+      box-shadow: none;
+      background: transparent;
+    }
+
+    .close-btn {
+      all: unset;
+
+      cursor: pointer;
+
+      font-size: 20px;
+
+      padding: 6px 10px;
+
+      border-radius: 10px;
+
+      border: 2px solid var(--border);
+
+      background: white;
+
+      box-shadow: var(--shadow-sm);
+
+
+    }
+
+    #apiResults {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .api-main-result {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: var(--shadow);
+    }
+
+    .api-main-result img {
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: var(--radius-md);
+    }
+
+    .api-main-result h2 {
+      font-size: 20px;
+    }
+
+    .api-main-result p {
+      color: #555;
+    }
+
+
+    .api-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+    }
+
+    .api-card {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      transition: 0.25s ease;
+      min-height: 260px;
+    }
+
+    .api-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+    }
+
+    .api-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .api-card h4 {
+      font-size: 15px;
+    }
+
+    .api-card p {
+      font-size: 13px;
+      color: #9ca3af;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .api-card button {
+      margin-top: auto;
+      border-radius: 20px;
+    }
+
+    .api-card small {
+      margin-top: auto;
+      color: #888;
+    }
+
+    .api-results {
+      overflow-y: auto;
+      height: calc(100% - 60px);
+      padding-right: 10px;
+    }
+
+    .loading-bar {
+      height: 4px;
+      width: 0%;
+      background: linear-gradient(90deg, #00c6ff, #0072ff);
+      transition: width 0.4s ease;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="bg-layer"></div>
+
+  <div class="navbar">
+
+    <div><b>StudyM△te</b></div>
+
+    <div class="row">
+
+      <a href="/notes" class="link">Notes</a>
+      <a href="/chat" class="link">Chatbot</a>
+      <a href="/flashcards" class="link">Flashcards</a>
+      <a href="/planner" class="link">Tasks</a>
+      <a href="/profile" class="link">Profile</a>
+      <a href="/auth/logout" class="link">Logout</a>
+
+    </div>
+
+  </div>
+
+  <!-- SEARCH -->
+
+  <div class="search-bar ">
+
+    <select id="searchType" class="input">
+
+      <option value="ai" selected>AI Chat</option>
+      <option value="api">API Search</option>
+
+    </select>
+
+    <input id="globalSearch" class="input" placeholder="Ask or search...">
+
+    <button class="btn btn-primary" onclick="handleSearch()">Go</button>
+
+  </div>
+
+  <!-- HERO -->
+
+  <div class="hero card">
+
+    <h1>Welcome, <%= user.name %>
+    </h1>
+
+    <p id="quote"></p>
+
+  </div>
+
+  <!-- SUBJECTS -->
+
+  <div class="section">
+
+    <h2>Subjects</h2>
+
+    <div class="cards">
+
+      <% subjects.forEach(sub=> { %>
+
+        <div class="card">
+
+          <h3>
+
+            <a href="/flashcards/<%= sub.subjectId %>" class="link">
+
+              <%= sub.name %>
+
+            </a>
+
+          </h3>
+
+        </div>
+
+        <% }) %>
+
+          <div class="card add-card" onclick="openModal('subjectModal')">+</div>
+
+    </div>
+
+  </div>
+
+  <!-- TASKS -->
+
+  <div class="section">
+
+    <h2>Active Tasks</h2>
+
+    <div class="cards task-grid">
+
+      <% tasksPreview.forEach(task=> { %>
+
+        <div class="card task-card">
+
+          <h3>
+            <%= task.title %>
+          </h3>
+
+          <p>
+            <%= task.description %>
+          </p>
+
+          <div class="progress-bar">
+
+            <div style="width:<%= task.progress || 0 %>%"></div>
+
+          </div>
+
+        </div>
+
+        <% }) %>
+
+          <div class="card add-card" onclick="openTaskModal()">+</div>
+
+    </div>
+
+  </div>
+
+  <!-- NOTES CARDS -->
+
+  <div class="section">
+
+    <h2>Your Notes</h2>
+
+    <div class="cards">
+
+      <% notes.forEach(note=> { %>
+
+        <div class="card">
+
+          <h4>
+            <%= note.title %>
+          </h4>
+
+          <p>
+            <%= note.scope %>
+          </p>
+
+        </div>
+
+        <% }) %>
+
+    </div>
+
+  </div>
+
+  <!-- AI MODAL -->
+
+  <div class="modal" id="aiModal">
+    <div class="loading-bar" id="globalLoading"></div>
+
+    <div class="modal-content card">
+
+      <div class="row" style="justify-content:space-between">
+
+        <h3>AI Chat</h3>
+
+        <button class="btn btn-danger" onclick="closeAIModal()">✕</button>
+
+      </div>
+
+      <div class="chat-area" id="chatArea"></div>
+
+      <div class="row">
+
+        <input id="chatInput" class="input" placeholder="Type message..."
+          onkeydown="if(event.key==='Enter') sendAIFromPopup()">
+
+        <button class="btn btn-primary" onclick="sendAIFromPopup()">Send</button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- API MODAL -->
+
+  <div class="modal" id="apiModal">
+    <div class="loading-bar" id="globalLoading"></div>
+
+    <div class="modal-content card" style="width:90%;max-width:1100px;height:85vh;overflow:hidden">
+
+      <div class="row" style="justify-content:space-between">
+
+        <h2>Research Results</h2>
+
+        <button class="btn btn-danger" onclick="closeAPIModal()">✕</button>
+
+      </div>
+
+      <div id="apiContainer" style="overflow-y:auto;height:calc(100% - 60px)"></div>
+
+    </div>
+
+  </div>
+
+  <!-- READ MORE -->
+
+  <div class="modal" id="apiReadMore">
+
+    <div class="modal-content card" style="width:70%;max-width:900px;height:75vh;overflow-y:auto">
+
+      <div class="row" style="justify-content:space-between">
+
+        <h3 id="popup-title"></h3>
+
+        <button class="btn btn-danger" onclick="closeReadMore()">✕</button>
+
+      </div>
+
+      <div id="popup-text"></div>
+
+    </div>
+
+  </div>
+
+
+  <div class="modal" id="subjectModal">
+    <div class="modal-content card">
+
+      <h3>Add Subject</h3>
+
+      <input id="subjectName" class="input" placeholder="Subject name">
+
+      <br><br>
+
+      <button class="btn btn-primary" onclick="submitSubject()">Create</button>
+
+      <button class="btn btn-secondary" onclick="closeModal('subjectModal')">Cancel</button>
+
+    </div>
+  </div>
+
+  <div class="modal" id="taskModal">
+    <div class="modal-content card">
+
+      <h3>Add Task</h3>
+
+      <input id="taskTitle" class="input" placeholder="Task title">
+
+      <textarea id="taskDesc" class="input" placeholder="Description"></textarea>
+
+      <br>
+
+      <button class="btn btn-primary" onclick="createTask()">Create</button>
+
+      <button class="btn btn-secondary" onclick="closeModal('taskModal')">Cancel</button>
+
+    </div>
+  </div>
+  <script>
+    /* ================================
+    GLOBAL UTILITIES
+    ================================ */
+
+    function toggleTheme() {
+      document.body.classList.toggle("image-mode");
+    }
+
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+
+    /* ================================
+    QUOTES
+    ================================ */
+
+    const quotes = [
+      "Small progress daily builds mastery.",
+      "Discipline is freedom.",
+      "Stay focused. Stay sharp.",
+      "Consistency creates success."
+    ];
+
+    function loadQuote() {
+      document.getElementById("quote").innerText =
+        quotes[Math.floor(Math.random() * quotes.length)];
+    }
+
+    loadQuote();
+    setInterval(loadQuote, 5000);
+    /* MODALS */
+
+    function openModal(id) {
+      document.getElementById(id).style.display = "flex";
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).style.display = "none";
+    }
+
+    /* AI CHAT */
+
+    /* ================================
+    AI CHAT
+    ================================ */
+
+    function openAIModal(initialMessage = null) {
+
+      openModal("aiModal");
+
+      if (initialMessage) {
+        sendAI(initialMessage);
+      }
+
+    }
+
+    function closeAIModal() {
+      closeModal("aiModal");
+    }
+
+    function sendAIFromPopup() {
+
+      const input = document.getElementById("chatInput").value.trim();
+      if (!input) return;
+
+      sendAI(input);
+      document.getElementById("chatInput").value = "";
+
+    }
+
+    async function sendAI(message) {
+
+      if (!message) return;
+
+      const chatArea = document.getElementById("chatArea");
+
+      chatArea.innerHTML += `
+    <div class="chat-message"><b>You:</b> ${message}</div>
+  `;
+      startLoading();
+      const res = await fetch("/dashboard/ai", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+
+      const data = await res.json();
+      finishLoading();
+      chatArea.innerHTML += `
+    <div class="chat-message"><b>(●'◡'●):</b><p class="typing"> ${data.reply}</p></div>
+  `;
+
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+
+    /* ================================
+    GLOBAL SEARCH
+    ================================ */
+
+    function handleSearch() {
+
+      const type = document.getElementById("searchType").value;
+      const query = document.getElementById("globalSearch").value.trim();
+
+      if (!query) return;
+
+      if (type === "ai") {
+        openAIModal(query);
+      }
+      else {
+        openModal("apiModal");
+        sendAPI(query);
+      }
+
+      document.getElementById("globalSearch").value = "";
+    }
+
+    /* ================================
+    RESEARCH API
+    ================================ */
+
+    async function sendAPI(query) {
+      startLoading();
+      const res = await fetch("/dashboard/api-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query,
+          wikipedia: true,
+          wikidata: false,
+          openalex: false,
+          duckduckgo: true
+        })
+      });
+      finishLoading();
+      const data = await res.json();
+      const container = document.getElementById("apiContainer");
+      container.innerHTML = "";
+
+      if (!data.results) {
+        container.innerHTML = "<p>No results</p>";
+        return;
+      }
+
+      let allResults = [];
+
+      data.results.forEach(src => {
+        if (src.results) {
+          src.results.forEach(r => {
+            allResults.push({ ...r, source: src.source });
+          });
+        }
+      });
+
+      if (allResults.length === 0) {
+        container.innerHTML = "<p>No results</p>";
+        return;
+      }
+
+      const first = allResults[0];
+
+      container.innerHTML = `<div class="api-grid" id="apiGrid"></div>`;
+
+      const grid = document.getElementById("apiGrid");
+
+      allResults.forEach(item => {
+
+        grid.innerHTML += `
+    <div class="api-card">
+
+      ${item.image ? `<img src="${item.image}">` : ""}
+
+      <h4>${item.title}</h4>
+
+      <p>${item.preview || ""}</p>
+
+      <button class="btn btn-primary"
+        onclick="openReadMore('${item.title}','${item.fullText || ""}')">
+        Read More
+      </button>
+
+      <small>${item.source || ""}</small>
+
+    </div>
+  `;
+
+      });
+    }
+
+    function openAPIModal() {
+      openModal("apiModal");
+    }
+
+    function closeAPIModal() {
+      closeModal("apiModal");
+    }
+
+    async function submitSubject() {
+
+      const name = document.getElementById("subjectName").value.trim();
+
+      if (!name) {
+        alert("Subject name is required");
+        return;
+      }
+
+      const res = await fetch("/subjects/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        closeModal("subjectModal");
+        location.reload();
+      } else {
+        alert(data.error || "Failed to create subject");
+      }
+    }
+
+    function openTaskModal() {
+      openModal("taskModal");
+    }
+
+    async function createTask() {
+
+      const title = document.getElementById("taskTitle").value.trim();
+      const description = document.getElementById("taskDesc").value.trim();
+
+      if (!title) {
+        alert("Task title required");
+        return;
+      }
+
+      const res = await fetch("/planner/create", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title,
+          description,
+          type: "task",
+          scope: "global"
+        })
+      });
+
+      // If request completed, assume success
+      if (res.status === 200 || res.redirected) {
+        closeModal("taskModal");
+        location.reload();
+      } else {
+        alert("Failed to create task");
+      }
+
+    }
+
+    function startLoading() {
+      const bar = document.getElementById("globalLoading");
+      if (!bar) return;
+
+      bar.style.width = "30%";
+
+      setTimeout(() => {
+        bar.style.width = "60%";
+      }, 300);
+    }
+
+    function finishLoading() {
+      const bar = document.getElementById("globalLoading");
+      if (!bar) return;
+
+      bar.style.width = "100%";
+
+      setTimeout(() => {
+        bar.style.width = "0%";
+      }, 500);
+    }
+  </script>
+
+</body>
+
+</html>

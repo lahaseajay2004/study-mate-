@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Study Planner</title>
+
+<style>
+/* hide scrollbars */
+
+::-webkit-scrollbar{
+width:0;
+height:0;
+}
+
+.sidebar,.board{
+scrollbar-width:none;
+}
+
+:root{
+
+--bg:#f6f6f6;
+--text:#222;
+
+--card:#ffffff;
+
+--accent:#63d4c3;
+--accent2:#ffd8a8;
+--accent3:#c7c6ff;
+--accent4:#d9f2c9;
+
+--border:#1f1f1f;
+
+--radius:18px;
+--radius-lg:24px;
+
+--gap:18px;
+
+}
+
+/* BODY */
+body::before{
+content:"";
+position:fixed;
+width:500px;
+height:500px;
+background:#c6f0e8;
+border-radius:50%;
+left:-150px;
+bottom:-150px;
+opacity:0.4;
+filter:blur(120px);
+z-index:-1;
+}
+
+body{
+margin:0;
+font-family:Segoe UI;
+background:var(--bg);
+color:var(--text);
+
+}
+
+/* APP LAYOUT */
+
+.app{
+display:flex;
+height:100vh;
+gap:var(--gap);
+padding:var(--gap);
+}
+
+/* GENERIC CARD STYLE */
+
+.card-style{
+
+background:var(--card);
+
+border:2px solid #1f1f1f;
+
+border-radius:var(--radius);
+
+box-shadow:
+6px 6px 0px #1f1f1f;
+
+}
+
+/* SIDEBAR */
+
+.sidebar{
+
+width:240px;
+flex-shrink:0;
+
+padding:20px;
+
+display:flex;
+flex-direction:column;
+
+background:var(--card);
+
+border:2px solid #1f1f1f;
+border-radius:var(--radius-lg);
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+overflow:auto;
+
+}
+
+.sidebar.collapsed{
+width:60px;
+padding:12px 6px;
+overflow:hidden;
+}
+
+.sidebar.collapsed .subject{
+display:none;
+}
+
+.sidebar.collapsed h3{
+display:none;
+}
+
+.sidebar.collapsed #toggleSidebar{
+margin:auto;
+}
+
+#toggleSidebar{
+
+width:36px;
+height:36px;
+
+border:2px solid #1f1f1f;
+border-radius:12px;
+
+background:#fff;
+
+box-shadow:4px 4px 0px #1f1f1f;
+
+cursor:pointer;
+
+}
+
+/* SUBJECT */
+
+.subject{
+
+padding:10px 14px;
+
+margin-bottom:10px;
+
+border-radius:14px;
+
+background:#fff;
+
+border:2px solid #1f1f1f;
+
+box-shadow:4px 4px 0px #1f1f1f;
+
+cursor:pointer;
+
+transition:.15s;
+
+}
+
+.subject:hover{
+
+transform:translate(-2px,-2px);
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+}
+
+/* MAIN BOARD */
+
+.board{
+flex:1;
+padding:20px;
+overflow:auto;
+}
+
+/* KANBAN */
+
+.kanban{
+
+display:grid;
+
+grid-template-columns:repeat(4,1fr);
+
+gap:20px;
+
+align-items:start;
+
+}
+
+/* COLUMN */
+
+.column{
+
+padding:18px;
+
+border-radius:var(--radius-lg);
+
+background:#fff;
+
+border:2px solid #1f1f1f;
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+min-height:350px;
+
+display:flex;
+flex-direction:column;
+
+}
+
+.column:nth-child(1){
+background:#ffffff;
+}
+
+.column:nth-child(2){
+background:#f7fbff;
+}
+
+.column:nth-child(3){
+background:#f9fff7;
+}
+
+.column:nth-child(4){
+background:#fffaf4;
+}
+
+/* TASK CARD */
+
+.task-card{
+
+border-radius:14px;
+
+padding:14px;
+
+margin-bottom:14px;
+
+background:#fff;
+
+border:2px solid #1f1f1f;
+
+box-shadow:4px 4px 0px #1f1f1f;
+
+cursor:grab;
+
+transition:.15s;
+
+}
+
+.task-card:hover{
+
+transform:translate(-2px,-2px);
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+}
+
+/* PROGRESS */
+
+.progress{
+
+height:6px;
+
+background:#e4e4e4;
+
+border-radius:6px;
+
+margin-top:8px;
+
+border:1px solid #1f1f1f;
+
+}
+
+.progress-bar{
+
+height:100%;
+
+background:var(--accent);
+
+}
+
+/* ADD BUTTON */
+
+.add-btn{
+
+width:100%;
+padding:10px;
+
+border-radius:14px;
+
+border:2px solid var(--border);
+
+background:var(--accent);
+
+box-shadow:4px 4px 0px var(--border);
+
+transition:.15s;
+
+font-weight:600;
+
+}
+
+.add-btn:hover{
+
+transform:translate(-2px,-2px);
+box-shadow:6px 6px 0px var(--border);
+
+}
+
+/* HABITS */
+
+.habits{
+margin-top:40px;
+}
+
+.habit-list{
+display:flex;
+gap:15px;
+margin-top:10px;
+}
+
+.habit-card{
+
+width:190px;
+
+padding:16px;
+
+border-radius:20px;
+
+background:#fff;
+
+border:2px solid #1f1f1f;
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+transition:.15s;
+
+}
+
+.habit-card:hover{
+
+transform:translate(-2px,-2px);
+
+box-shadow:8px 8px 0px #1f1f1f;
+
+}
+
+/* HABIT BUTTON */
+
+.habit-btn{
+
+margin-top:10px;
+
+width:100%;
+padding:7px;
+
+border-radius:12px;
+
+border:2px solid var(--border);
+
+background:var(--accent4);
+
+box-shadow:4px 4px 0px var(--border);
+
+font-weight:600;
+
+}
+
+/* EDITOR */
+
+.editor{
+
+width:320px;
+
+flex-shrink:0;
+
+padding:20px;
+
+background:#fff;
+
+border-radius:var(--radius-lg);
+
+border:2px solid #1f1f1f;
+
+box-shadow:6px 6px 0px #1f1f1f;
+
+overflow:auto;
+
+}
+
+.editor.hidden{
+display:none;
+}
+
+/* INPUTS */
+
+.editor input,
+.editor select{
+
+width:100%;
+
+padding:10px;
+
+margin-bottom:10px;
+
+border-radius:12px;
+
+border:2px solid #1f1f1f;
+
+background:#fff;
+
+}
+
+/* STEPS */
+
+.step{
+display:flex;
+gap:5px;
+margin-bottom:5px;
+}
+
+/* QUICKBAR */
+
+.quickbar{
+
+display:flex;
+
+gap:10px;
+
+padding:10px var(--gap);
+
+}
+
+.quickbar a{
+
+display:flex;
+align-items:center;
+gap:6px;
+
+padding:6px 14px;
+
+font-size:14px;
+
+border-radius:14px;
+
+background:white;
+
+border:2px solid var(--border);
+
+box-shadow:4px 4px 0px var(--border);
+
+cursor:pointer;
+
+transition:.15s;
+
+}
+
+.quickbar a:nth-child(1){
+background:var(--accent3);
+}
+
+.quickbar a:nth-child(2){
+background:#fff;
+}
+
+.quickbar a:nth-child(3){
+background:var(--accent4);
+}
+
+.quickbar a:nth-child(4){
+background:var(--accent2);
+}
+
+.quickbar a:hover{
+
+transform:translate(-2px,-2px);
+box-shadow:6px 6px 0px var(--border);
+
+}
+
+.border-outline{
+border:2px solid #1f1f1f;
+}
+
+.border-soft{
+border:2px solid #d6d6d6;
+}
+
+.border-accent{
+border:2px solid var(--accent);
+}
+
+.border-warning{
+border:2px solid #ffb84d;
+}
+
+.border-success{
+border:2px solid #7ed957;
+}
+
+.border-info{
+border:2px solid #7da8ff;
+}
+
+.border-dashed{
+border:2px dashed #1f1f1f;
+}
+
+.border-dashed{
+border:2px dashed #1f1f1f;
+}
+
+.shadow-offset{
+box-shadow:6px 6px 0px #1f1f1f;
+}
+
+.shadow-small{
+box-shadow:3px 3px 0px #1f1f1f;
+}
+
+.shadow-soft{
+box-shadow:
+0 6px 14px rgba(0,0,0,0.15);
+}
+
+.shadow-layered{
+box-shadow:
+4px 4px 0 #1f1f1f,
+8px 8px 0 rgba(0,0,0,0.2);
+}
+
+.shadow-glow{
+box-shadow:
+0 0 0 2px #1f1f1f,
+0 0 12px rgba(99,212,195,0.6);
+}
+
+.card-ui{
+border:2px solid #1f1f1f;
+box-shadow:6px 6px 0px #1f1f1f;
+border-radius:16px;
+background:white;
+}
+
+.card-soft{
+border:2px solid #ddd;
+box-shadow:0 8px 20px rgba(0,0,0,0.12);
+border-radius:18px;
+background:white;
+}
+
+.card-highlight{
+border:2px solid #1f1f1f;
+box-shadow:6px 6px 0px #1f1f1f;
+background:#d9f2c9;
+}
+
+.card-highlight{
+border:2px solid #1f1f1f;
+box-shadow:6px 6px 0px #1f1f1f;
+background:#d9f2c9;
+}
+
+.hover-lift:hover{
+transform:translate(-2px,-2px);
+box-shadow:8px 8px 0px #1f1f1f;
+}
+</style>
+</head>
+
+<body>
+<div class="quickbar">
+
+<a onclick="openEditor('task','todo')">
+<i class="fi fi-rr-square-plus"></i>
+Task
+</a>
+
+<a onclick="openEditor('todo','todo')">
+<i class="fi fi-rr-list"></i>
+Todo
+</a>
+
+<a onclick="openEditor('habit')">
+<i class="fi fi-rr-repeat"></i>
+Habit
+</a>
+
+<a onclick="toggleTheme()">
+<i class="fi fi-rr-moon"></i>
+Theme
+</a>
+
+</div>
+
+<div class="app">
+
+<!-- LEFT SIDEBAR -->
+
+<div class="sidebar collapsed" id="sidebar">
+
+<h3>Subjects</h3>
+
+<button id="toggleSidebar" onclick="toggleSidebar()">☰</button>
+<div class="subject" onclick="loadScope('all')">
+📋 All Tasks
+</div>
+
+<div class="subject" onclick="loadScope('global')">
+🌍 Global
+</div>
+<% subjects.forEach(s=>{ %>
+
+<div class="subject"onclick="loadScope('subject','<%= s.subjectId %>','<%= s.name %>')">
+
+📚 <%= s.name %>
+
+</div>
+
+<% }) %>
+
+</div>
+
+
+
+<!-- MAIN BOARD -->
+
+<div class="board">
+
+<div class="kanban">
+
+<div class="column" data-status="todo">
+<h4>To-Do</h4>
+<div id="todo"></div>
+<button class="add-btn" onclick="openEditor('task','todo')">＋</button>
+</div>
+
+<div class="column" data-status="pending">
+<h4>Pending</h4>
+<div id="pending"></div>
+<button class="add-btn" onclick="openEditor('task','pending')">＋</button>
+</div>
+
+<div class="column" data-status="progress">
+<h4>In Progress</h4>
+<div id="progress"></div>
+<button class="add-btn" onclick="openEditor('task','progress')">＋</button>
+</div>
+
+<div class="column" data-status="completed">
+<h4>Completed</h4>
+<div id="completed"></div>
+</div>
+
+</div>
+
+
+<!-- HABITS -->
+
+<div class="habits">
+
+<h3>Habits</h3>
+
+<div class="habit-list" id="habitList">
+
+<div class="habit-card"
+onclick="openEditor('habit')">
+
+＋ Add Habit
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- RIGHT EDITOR -->
+
+<div class="editor hidden" id="editor">
+
+<h3 id="editorTitle">Create</h3>
+
+<form id="taskForm">
+
+<input name="title" placeholder="Title">
+
+<select name="type" id="typeSelect">
+<option value="task">Task</option>
+<option value="todo">Todo</option>
+<option value="habit">Habit</option>
+</select>
+
+<select name="status" id="statusSelect">
+<option value="todo">To-Do</option>
+<option value="pending">Pending</option>
+<option value="progress">In Progress</option>
+<option value="completed">Completed</option>
+</select>
+
+<input type="date" name="dueDate">
+<input type="hidden" name="scope" value="<%= scope %>">
+<input type="hidden" name="subjectId" value="<%= subjectId %>">
+
+<select name="priority">
+<option value="low">Low</option>
+<option value="medium">Medium</option>
+<option value="high">High</option>
+</select>
+
+<div id="steps"></div>
+
+<button type="button" onclick="addStep()">＋ Step</button>
+
+<div class="editor-actions">
+
+<button type="submit">Save</button>
+
+<button type="button" onclick="deleteTask()">Delete</button>
+
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+
+
+const tasks = <%- JSON.stringify(tasks) %>;
+
+let currentTask=null;
+
+
+/* =============================
+RENDER TASKS
+============================= */
+
+function render(){
+
+["todo","pending","progress","completed"].forEach(s=>{
+document.getElementById(s).innerHTML="";
+});
+
+tasks.forEach(t=>{
+
+if(t.type==="habit") return;
+
+const el=document.createElement("div");
+
+el.className="task-card";
+el.draggable=true;
+el.dataset.id=t.taskId;
+
+const stepsHTML = Object.values(t.steps || {})
+.map(s => `<div class="card-step">• ${s.title}</div>`)
+.join("");
+
+el.innerHTML=`
+<b>${t.title}</b>
+
+${stepsHTML}
+
+<div class="progress">
+<div class="progress-bar"
+style="width:${t.progress || 0}%"></div>
+</div>
+`;
+
+el.onclick=()=>openEditorFromTask(t);
+
+const statusMap=["todo","pending","progress","completed"];
+const column=statusMap.includes(t.status)?t.status:"todo";
+
+document.getElementById(column).appendChild(el);
+
+});
+
+renderHabits();
+dragInit();
+
+}
+
+
+/* =============================
+HABITS
+============================= */
+
+function renderHabits(){
+
+const row=document.getElementById("habitList");
+const days=["M","T","W","T","F","S","S"];
+
+const calendar = days.map(d=>
+`<span class="habit-day">${d}</span>`
+).join("");
+
+row.innerHTML=`<div class="habit-card" onclick="openEditor('habit')">＋ Add Habit</div>`;
+
+tasks.filter(t=>t.type==="habit")
+.forEach(h=>{
+
+const el=document.createElement("div");
+
+el.className="habit-card";
+
+el.innerHTML=`
+<b>${h.title}</b>
+<div class="habit-days">
+${calendar}
+</div>
+<button class="habit-btn"
+onclick="markHabit('${h.taskId}')">
+Done
+</button>
+`;
+
+row.prepend(el);
+
+});
+
+}
+
+
+/* =============================
+EDITOR
+============================= */
+
+function openEditor(type,status="todo"){
+
+currentTask=null;
+
+document.getElementById("editor").classList.remove("hidden");
+
+document.getElementById("taskForm").reset();
+document.getElementById("steps").innerHTML="";
+
+document.getElementById("typeSelect").value=type;
+document.getElementById("statusSelect").value=status;
+
+}
+
+function openEditorFromTask(task){
+
+document.getElementById("editor").classList.remove("hidden");
+
+currentTask=task;
+
+const f=document.getElementById("taskForm");
+
+f.title.value=task.title;
+f.type.value=task.type;
+f.status.value=task.status;
+
+document.getElementById("steps").innerHTML="";
+
+Object.values(task.steps||{}).forEach(s=>{
+addStep(s.title || "");
+});
+
+}
+
+/* =============================
+STEPS
+============================= */
+
+function addStep(title=""){
+
+const div=document.createElement("div");
+
+div.className="step";
+
+div.innerHTML=`
+<input placeholder="Step" value="${title}">
+`;
+
+document.getElementById("steps").appendChild(div);
+
+}
+
+
+/* =============================
+DRAG DROP
+============================= */
+
+function dragInit(){
+
+document.querySelectorAll(".task-card").forEach(card=>{
+
+card.addEventListener("dragstart",e=>{
+e.dataTransfer.setData("id",card.dataset.id);
+});
+
+});
+
+document.querySelectorAll(".column").forEach(col=>{
+
+col.addEventListener("dragover",e=>e.preventDefault());
+
+col.addEventListener("drop",async e=>{
+
+const id=e.dataTransfer.getData("id");
+
+const task=tasks.find(t=>t.taskId===id);
+
+task.status=col.dataset.status;
+
+await fetch("/planner/update-status",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify({
+taskId:id,
+status:task.status,
+scope:"global"
+})
+});
+
+render();
+
+});
+
+});
+
+}
+
+
+/* =============================
+HABIT
+============================= */
+
+function markHabit(id){
+
+fetch("/planner/habit-done/"+id,{method:"POST"})
+.then(()=>location.reload());
+
+}
+
+
+/* =============================
+DELETE
+============================= */
+
+async function deleteTask(){
+
+if(!currentTask) return;
+
+await fetch("/planner/delete/"+currentTask.taskId,{
+method:"POST"
+});
+
+location.reload();
+
+}
+
+
+/* =============================
+SAVE TASK
+============================= */
+
+document.getElementById("taskForm").addEventListener("submit",async function(e){
+
+e.preventDefault();
+
+const form=e.target;
+
+const steps=[...document.querySelectorAll("#steps input")]
+.map(i=>({title:i.value}))
+.filter(s=>s.title.trim()!=="");
+
+const data={
+title:form.title.value,
+type:form.type.value,
+status:form.status.value,
+dueDate:form.dueDate.value,
+priority:form.priority.value,
+scope:form.scope.value,
+subjectId:form.subjectId.value,
+steps:steps
+};
+
+if(currentTask){
+
+await fetch("/planner/update/"+currentTask.taskId,{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify(data)
+});
+
+}else{
+
+await fetch("/planner/create",{
+method:"POST",
+headers:{ "Content-Type":"application/json" },
+body:JSON.stringify(data)
+});
+
+}
+
+location.reload();
+
+});
+
+
+/* =============================
+INIT
+============================= */
+
+render();
+
+function toggleSidebar(){
+
+const sb=document.getElementById("sidebar");
+
+sb.classList.toggle("collapsed");
+
+}
+
+function loadScope(scope,subjectId=null,name=""){
+
+let url="/planner?scope="+scope;
+
+if(subjectId){
+url+="&subjectId="+subjectId;
+}
+
+window.location=url;
+
+}
+
+const urlParams = new URLSearchParams(window.location.search);
+const scope = urlParams.get("scope");
+
+const label = document.getElementById("currentSubject");
+
+if(scope === "all"){
+label.innerText="📋 All";
+}
+else if(scope === "subject"){
+label.innerText="📚 Subject";
+}
+else{
+label.innerText="🌍 Global";
+}
+
+function toggleTheme(){
+
+document.body.classList.toggle("dark");
+
+localStorage.setItem(
+"theme",
+document.body.classList.contains("dark")
+? "dark"
+: "light"
+);
+
+}
+
+if(localStorage.getItem("theme")==="dark"){
+document.body.classList.add("dark");
+}
+</script>
+
+</body>
+</html>

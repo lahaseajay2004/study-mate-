@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>StudyMate Login</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="/css/ui-kit.css">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+    <style>
+        /* PAGE LAYOUT */
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* floating icons */
+
+        .floating {
+            position: absolute;
+            opacity: 0.15;
+            animation: float 6s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        /* different sizes */
+
+        .small {
+            font-size: 24px;
+        }
+
+        .medium {
+            font-size: 32px;
+        }
+
+        .large {
+            font-size: 42px;
+        }
+
+        /* positions */
+
+        .i1 {
+            top: 8%;
+            left: 6%;
+        }
+
+        .i2 {
+            top: 18%;
+            left: 20%;
+        }
+
+        .i3 {
+            top: 12%;
+            right: 10%;
+        }
+
+        .i4 {
+            top: 30%;
+            right: 5%;
+        }
+
+        .i5 {
+            top: 45%;
+            left: 5%;
+        }
+
+        .i6 {
+            top: 55%;
+            right: 15%;
+        }
+
+        .i7 {
+            bottom: 25%;
+            left: 12%;
+        }
+
+        .i8 {
+            bottom: 18%;
+            right: 10%;
+        }
+
+        .i9 {
+            bottom: 8%;
+            left: 25%;
+        }
+
+        .i10 {
+            bottom: 5%;
+            right: 20%;
+        }
+
+        .i11 {
+            top: 50%;
+            left: 35%;
+        }
+
+        .i12 {
+            top: 70%;
+            right: 30%;
+        }
+
+        /* animation speed variations */
+
+        .fast {
+            animation-duration: 3s;
+        }
+
+        .slow {
+            animation-duration: 8s;
+        }
+
+        /* login card */
+
+        .login-card {
+            width: 100%;
+            max-width: 380px;
+            padding: 28px;
+        }
+
+        /* title */
+
+        .brand {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        /* subtitle */
+
+        .sub {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* form layout */
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        /* input with icon */
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-wrap i {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .input-wrap input {
+            padding-left: 34px;
+            box-sizing: border-box;
+        }
+
+        /* login button */
+
+        .login-btn {
+            width: 100%;
+            margin-top: 6px;
+        }
+
+        /* footer */
+
+        .footer {
+            margin-top: 14px;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div class="page">
+
+        <!-- floating decorative icons -->
+
+        <i class='bx bx-book floating medium i1'></i>
+        <i class='bx bx-brain floating large slow i2'></i>
+        <i class='bx bx-code-alt floating medium fast i3'></i>
+        <i class='bx bx-layer floating small i4'></i>
+        <i class='bx bx-chip floating medium slow i5'></i>
+        <i class='bx bx-network-chart floating small fast i6'></i>
+        <i class='bx bx-bracket floating medium i7'></i>
+        <i class='bx bx-atom floating large slow i8'></i>
+        <i class='bx bx-brain floating small fast i9'></i>
+        <i class='bx bx-book-open floating medium i10'></i>
+        <i class='bx bx-code floating small slow i11'></i>
+        <i class='bx bx-bulb floating medium fast i12'></i>
+        <div class="card login-card fade-in">
+
+            <div class="brand text-title typing">
+                StudyMate
+            </div>
+
+            <div class="sub text-muted">
+                Smart learning workspace
+            </div>
+
+            <form action="/auth/login" method="POST" class="login-form">
+
+                <div class="input-wrap">
+                    <i class='bx bx-envelope'></i>
+                    <input type="email" name="email" placeholder="Email" class="input" required>
+                </div>
+
+                <div class="input-wrap">
+                    <i class='bx bx-lock-alt'></i>
+                    <input type="password" name="password" placeholder="Password" class="input" required>
+                </div>
+
+                <button class="btn btn-primary login-btn pulse">
+                    Login
+                </button>
+
+            </form>
+
+            <div class="footer">
+                <a href="/auth/register" class="link">
+                    Create Account
+                </a>
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <title>Profile</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="/css/ui-kit.css">
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+
+  <style>
+    /* PAGE */
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* CONTENT CENTER */
+
+    .wrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 30px;
+    }
+
+    /* PROFILE CARD */
+
+    .profile-card {
+      max-width: 480px;
+      width: 100%;
+      padding: 28px;
+    }
+
+    /* stats */
+
+    .stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+    }
+
+    /* sections */
+
+    .section {
+      margin-top: 18px;
+    }
+
+    /* form */
+
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    /* modal */
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.4);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-card {
+      width: 340px;
+    }
+
+    /* toast */
+
+    .toast {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+    }
+
+    /* floating icons */
+
+    .floating {
+      position: absolute;
+      opacity: 0.15;
+      animation: float 6s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .small {
+      font-size: 22px;
+    }
+
+    .medium {
+      font-size: 30px;
+    }
+
+    .large {
+      font-size: 40px;
+    }
+
+    .i1 {
+      top: 8%;
+      left: 6%;
+    }
+
+    .i2 {
+      top: 18%;
+      left: 20%;
+    }
+
+    .i3 {
+      top: 12%;
+      right: 10%;
+    }
+
+    .i4 {
+      top: 30%;
+      right: 5%;
+    }
+
+    .i5 {
+      top: 45%;
+      left: 5%;
+    }
+
+    .i6 {
+      top: 55%;
+      right: 15%;
+    }
+
+    .i7 {
+      bottom: 25%;
+      left: 12%;
+    }
+
+    .i8 {
+      bottom: 18%;
+      right: 10%;
+    }
+
+    .i9 {
+      bottom: 8%;
+      left: 25%;
+    }
+
+    .i10 {
+      bottom: 5%;
+      right: 20%;
+    }
+
+    .fast {
+      animation-duration: 3s;
+    }
+
+    .slow {
+      animation-duration: 8s;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <div class="page">
+
+    <!-- NAVBAR -->
+    <div class="top-nav">
+      <div class="text-subtitle">StudyMate</div>
+      <div class="nav-links">
+        <a href="/dashboard">Dashboard</a>
+        <a href="/auth/logout">Logout</a>
+      </div>
+    </div>
+
+    <!-- floating icons -->
+
+    <i class='bx bx-book floating medium i1'></i>
+    <i class='bx bx-brain floating large slow i2'></i>
+    <i class='bx bx-code-alt floating medium fast i3'></i>
+    <i class='bx bx-layer floating small i4'></i>
+    <i class='bx bx-chip floating medium slow i5'></i>
+    <i class='bx bx-network-chart floating small fast i6'></i>
+    <i class='bx bx-bracket floating medium i7'></i>
+    <i class='bx bx-atom floating large slow i8'></i>
+    <i class='bx bx-book-open floating medium i9'></i>
+    <i class='bx bx-bulb floating medium fast i10'></i>
+
+    <!-- CONTENT -->
+
+    <div class="wrapper">
+
+      <div class="card profile-card col fade-in">
+
+        <div class="text-title text-center">Profile</div>
+
+        <div class="section">
+
+          <div class="stat">
+            <span>Name</span>
+            <span>
+              <%= user.name %>
+            </span>
+          </div>
+
+          <div class="stat">
+            <span>Email</span>
+            <span>
+              <%= user.email %>
+            </span>
+          </div>
+
+          <div class="stat">
+            <span>Password</span>
+            <span>********</span>
+          </div>
+
+          <div class="stat">
+            <span>Joined</span>
+            <span>
+              <%= new Date(user.createdAt).toDateString() %>
+            </span>
+          </div>
+
+        </div>
+
+        <div class="section">
+
+          <div class="text-subtitle">Stats</div>
+
+          <div class="stat">
+            <span>Total Subjects</span>
+            <span>
+              <%= totalSubjects %>
+            </span>
+          </div>
+
+          <div class="stat">
+            <span>Total Projects</span>
+            <span>
+              <%= totalProjects %>
+            </span>
+          </div>
+
+          <div class="stat">
+            <span>Total Tasks</span>
+            <span>
+              <%= totalTasks %>
+            </span>
+          </div>
+
+        </div>
+
+        <div class="section">
+
+          <div class="text-subtitle">Edit Name</div>
+
+          <form method="POST" action="/profile/update-name" class="form">
+
+            <input class="input" name="name" value="<%= user.name %>" required>
+
+            <button class="btn btn-primary">
+              Update Name
+            </button>
+
+          </form>
+
+        </div>
+
+        <div class="section">
+
+          <button class="btn btn-secondary" onclick="openModal()">
+            Change Password
+          </button>
+
+        </div>
+
+         <div class="section">
+
+      <div class="text-subtitle">Integrations</div>
+
+      <div class="stat">
+        <span>Google Calendar</span>
+
+        <span>
+          <% if (!googleConnected) { %>
+            <a href="/profile/google/connect" class="btn btn-primary" style="padding:6px 10px; font-size:12px;">
+              Connect
+            </a>
+            <% } else { %>
+              <span style="color: #4caf50;">Connected</span>
+              <a href="/profile/google/disconnect" class="btn btn-secondary"
+                style="padding:6px 10px; font-size:12px; margin-left:6px;">
+                Disconnect
+              </a>
+              <% } %>
+        </span>
+
+      </div>
+
+    </div>
+
+      </div>
+
+    </div>
+
+   
+
+  </div>
+
+  <!-- PASSWORD MODAL -->
+
+  <div class="modal center" id="passwordModal">
+
+    <div class="card modal-card col">
+
+      <div class="row" style="justify-content:space-between">
+        <div class="text-subtitle">Change Password</div>
+        <div style="cursor:pointer" onclick="closeModal()">✖</div>
+      </div>
+
+      <form method="POST" action="/profile/change-password" class="form" onsubmit="return validatePassword()">
+
+        <input class="input" type="password" name="newPassword" id="newPassword" placeholder="New Password" required>
+
+        <input class="input" type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password"
+          required>
+
+        <button class="btn btn-success">
+          Update Password
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+
+  <!-- TOAST -->
+
+  <div id="toast" class="toast card"></div>
+
+  <script>
+
+    function openModal() {
+      document.getElementById("passwordModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("passwordModal").style.display = "none";
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+
+      toast.innerText = message;
+      toast.style.display = "block";
+
+      setTimeout(() => {
+        toast.style.display = "none";
+      }, 3000);
+    }
+
+    function validatePassword() {
+
+      const newPass = document.getElementById("newPassword").value;
+      const confirmPass = document.getElementById("confirmPassword").value;
+
+      if (newPass !== confirmPass) {
+        showToast("Passwords do not match!");
+        return false;
+      }
+
+      showToast("Password updated successfully!");
+      return true;
+
+    }
+
+  </script>
+
+</body>
+
+</html>

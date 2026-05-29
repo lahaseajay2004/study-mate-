@@ -1,0 +1,966 @@
+/* =========================
+THEME VARIABLES
+========================= */
+
+:root {
+  --bg: #f5f6f8;
+  --text: #222;
+
+  --card: #ffffff;
+
+  --primary: #63d4c3;
+  --secondary: #c7c6ff;
+  --accent: #ffd8a8;
+  --success: #d9f2c9;
+  --danger: #ffb3b3;
+
+  --border: #1f1f1f;
+
+  --radius-sm: 8px;
+  --radius: 14px;
+  --radius-lg: 20px;
+
+  --shadow-sm: 3px 3px 0px var(--border);
+  --shadow: 5px 5px 0px var(--border);
+  --shadow-lg: 8px 8px 0px var(--border);
+
+  --transition: 0.2s ease;
+}
+
+/* =========================
+BODY STYLE
+========================= */
+
+body {
+  margin: 0;
+
+  font-family:
+    Segoe UI,
+    system-ui;
+
+  background: var(--bg);
+
+  color: var(--text);
+
+  transition: 0.3s;
+}
+
+/* background blobs */
+
+body::before {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: var(--primary);
+  border-radius: 50%;
+  left: -120px;
+  bottom: -120px;
+  opacity: 0.25;
+  filter: blur(120px);
+  z-index: -1;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: var(--secondary);
+  border-radius: 50%;
+  right: -120px;
+  top: -120px;
+  opacity: 0.25;
+  filter: blur(120px);
+  z-index: -1;
+}
+
+/* =========================
+CARDS
+========================= */
+
+.card {
+  background: var(--card);
+
+  border: 2px solid var(--border);
+
+  border-radius: var(--radius);
+
+  padding: 16px;
+
+  box-shadow: var(--shadow);
+
+  transition: var(--transition);
+}
+
+.card:hover {
+  transform: translate(-2px, -2px);
+
+  box-shadow: var(--shadow-lg);
+}
+
+/* variants */
+
+.card-soft {
+  border: 2px solid #ddd;
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-primary {
+  background: var(--primary);
+}
+
+.card-accent {
+  background: var(--accent);
+}
+
+.card-success {
+  background: var(--success);
+}
+
+.card-dashed {
+  border: 2px dashed var(--border);
+}
+
+/* =========================
+BUTTONS
+========================= */
+
+.btn {
+  padding: 8px 16px;
+
+  border-radius: var(--radius-sm);
+
+  border: 2px solid var(--border);
+
+  background: white;
+
+  cursor: pointer;
+
+  box-shadow: var(--shadow-sm);
+
+  transition: var(--transition);
+}
+
+.btn:hover {
+  transform: translate(-2px, -2px);
+
+  box-shadow: var(--shadow);
+}
+
+.btn:active {
+  transform: translate(1px, 1px);
+
+  box-shadow: var(--shadow-sm);
+}
+
+/* button colors */
+
+.btn-primary {
+  background: var(--primary);
+}
+
+.btn-secondary {
+  background: var(--secondary);
+}
+
+.btn-accent {
+  background: var(--accent);
+}
+
+.btn-success {
+  background: var(--success);
+}
+
+.btn-danger {
+  background: var(--danger);
+}
+
+/* =========================
+ANCHOR LINKS
+========================= */
+
+.link {
+  text-decoration: none;
+
+  padding: 6px 12px;
+
+  border-radius: var(--radius-sm);
+
+  border: 2px solid var(--border);
+
+  background: white;
+
+  box-shadow: var(--shadow-sm);
+
+  transition: var(--transition);
+
+  color: var(--text);
+}
+
+.link:hover {
+  transform: translate(-2px, -2px);
+
+  box-shadow: var(--shadow);
+}
+
+/* =========================
+INPUT FIELDS
+========================= */
+
+.input {
+  width: 100%;
+
+  padding: 10px;
+
+  border-radius: var(--radius-sm);
+
+  border: 2px solid var(--border);
+
+  background: white;
+
+  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.1);
+
+  outline: none;
+
+  transition: var(--transition);
+}
+
+.input:focus {
+  border-color: var(--primary);
+
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+/* =========================
+TOGGLE SWITCH
+========================= */
+
+.toggle {
+  position: relative;
+
+  width: 50px;
+
+  height: 26px;
+
+  background: #ddd;
+
+  border-radius: 20px;
+
+  cursor: pointer;
+
+  transition: var(--transition);
+}
+
+.toggle::before {
+  content: "";
+
+  position: absolute;
+
+  width: 20px;
+  height: 20px;
+
+  background: white;
+
+  border-radius: 50%;
+
+  top: 3px;
+  left: 3px;
+
+  box-shadow: var(--shadow-sm);
+
+  transition: var(--transition);
+}
+
+.toggle.active {
+  background: var(--primary);
+}
+
+.toggle.active::before {
+  transform: translateX(24px);
+}
+
+/* =========================
+IMAGE STYLES
+========================= */
+
+.img-card {
+  border-radius: var(--radius);
+
+  border: 2px solid var(--border);
+
+  box-shadow: var(--shadow);
+
+  max-width: 100%;
+}
+
+.img-circle {
+  border-radius: 50%;
+
+  border: 3px solid var(--border);
+
+  box-shadow: var(--shadow-sm);
+}
+
+.img-soft {
+  border-radius: var(--radius);
+
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* =========================
+BORDER UTILITIES
+========================= */
+
+.border-soft {
+  border: 2px solid #ddd;
+}
+
+.border-dashed {
+  border: 2px dashed var(--border);
+}
+
+.border-double {
+  border: 3px double var(--border);
+}
+
+.border-primary {
+  border: 2px solid var(--primary);
+}
+
+/* =========================
+SHADOW UTILITIES
+========================= */
+
+.shadow-sm {
+  box-shadow: var(--shadow-sm);
+}
+
+.shadow {
+  box-shadow: var(--shadow);
+}
+
+.shadow-lg {
+  box-shadow: var(--shadow-lg);
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 12px var(--primary);
+}
+
+/* =========================
+ANIMATIONS
+========================= */
+
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+
+/* =========================
+LAYOUT UTILITIES
+========================= */
+
+.row {
+  display: flex;
+  gap: 12px;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+/* =========================
+LOADERS
+========================= */
+
+/* container */
+
+.loader-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* =========================
+SPINNER
+========================= */
+
+.loader-spinner {
+  width: 36px;
+  height: 36px;
+
+  border: 4px solid #e5e5e5;
+  border-top: 4px solid var(--primary);
+
+  border-radius: 50%;
+
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* =========================
+DOT LOADER
+========================= */
+
+.loader-dots {
+  display: flex;
+  gap: 6px;
+}
+
+.loader-dots div {
+  width: 10px;
+  height: 10px;
+
+  background: var(--primary);
+
+  border-radius: 50%;
+
+  animation: dots 1.2s infinite;
+}
+
+.loader-dots div:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.loader-dots div:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dots {
+  0%,
+  80%,
+  100% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+
+  40% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* =========================
+BAR LOADER
+========================= */
+
+.loader-bars {
+  display: flex;
+  gap: 4px;
+}
+
+.loader-bars div {
+  width: 6px;
+  height: 24px;
+
+  background: var(--primary);
+
+  border-radius: 4px;
+
+  animation: bars 1s infinite ease-in-out;
+}
+
+.loader-bars div:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loader-bars div:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.loader-bars div:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.loader-bars div:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bars {
+  0%,
+  100% {
+    transform: scaleY(0.5);
+  }
+
+  50% {
+    transform: scaleY(1.4);
+  }
+}
+
+/* =========================
+PULSE LOADER
+========================= */
+
+.loader-pulse {
+  width: 40px;
+  height: 40px;
+
+  background: var(--primary);
+
+  border-radius: 50%;
+
+  animation: pulseLoader 1.2s infinite;
+}
+
+@keyframes pulseLoader {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.6);
+    opacity: 0.6;
+  }
+}
+
+/* =========================
+RING LOADER
+========================= */
+
+.loader-ring {
+  width: 40px;
+  height: 40px;
+
+  border: 4px solid transparent;
+  border-top: 4px solid var(--primary);
+  border-right: 4px solid var(--secondary);
+
+  border-radius: 50%;
+
+  animation: spin 1s linear infinite;
+}
+
+/* =========================
+PROGRESS LOADER
+========================= */
+
+.loader-progress {
+  width: 200px;
+  height: 8px;
+
+  background: #eee;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+.loader-progress::after {
+  content: "";
+
+  display: block;
+
+  height: 100%;
+  width: 40%;
+
+  background: var(--primary);
+
+  animation: progress 1.5s infinite;
+}
+
+@keyframes progress {
+  0% {
+    transform: translateX(-100%);
+  }
+
+  100% {
+    transform: translateX(250%);
+  }
+}
+
+/* =========================
+SKELETON LOADER
+========================= */
+
+.skeleton {
+  background: linear-gradient(90deg, #eeeeee 25%, #dddddd 37%, #eeeeee 63%);
+
+  background-size: 400% 100%;
+
+  animation: skeleton 1.4s ease infinite;
+
+  border-radius: 8px;
+}
+
+@keyframes skeleton {
+  0% {
+    background-position: 100% 0;
+  }
+
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.skeleton-text {
+  height: 14px;
+  margin-bottom: 8px;
+}
+
+.skeleton-card {
+  height: 120px;
+}
+
+/* =========================
+TEXT STYLES
+========================= */
+
+.text-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.text-subtitle {
+  font-size: 20px;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.text-muted {
+  opacity: 0.6;
+}
+
+.text-small {
+  font-size: 12px;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.text-accent {
+  color: var(--accent);
+}
+
+.text-success {
+  color: var(--success);
+}
+
+.text-danger {
+  color: var(--danger);
+}
+
+/* =========================
+TYPEWRITER / TYPING
+========================= */
+
+.typing {
+  overflow: hidden;
+
+  border-right: 3px solid var(--primary);
+
+  white-space: nowrap;
+
+  width: 0;
+
+  animation:
+    typing 3s steps(30, end) forwards,
+    cursorBlink 0.8s infinite;
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+
+  to {
+    width: 100%;
+  }
+}
+
+@keyframes cursorBlink {
+  0%,
+  100% {
+    border-color: transparent;
+  }
+
+  50% {
+    border-color: var(--primary);
+  }
+}
+
+/* =========================
+LOOPING TYPING
+========================= */
+
+.typing-loop {
+  overflow: hidden;
+
+  white-space: nowrap;
+
+  border-right: 3px solid var(--primary);
+
+  animation:
+    typingLoop 4s steps(30, end) infinite,
+    cursorBlink 0.8s infinite;
+}
+
+@keyframes typingLoop {
+  0% {
+    width: 0;
+  }
+
+  40% {
+    width: 100%;
+  }
+
+  60% {
+    width: 100%;
+  }
+
+  100% {
+    width: 0;
+  }
+}
+
+/* =========================
+FADE IN TEXT
+========================= */
+
+.text-fade {
+  animation: textFade 0.8s ease;
+}
+
+@keyframes textFade {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+SLIDE IN
+========================= */
+
+.text-slide-left {
+  animation: slideLeft 0.6s ease;
+}
+
+@keyframes slideLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.text-slide-right {
+  animation: slideRight 0.6s ease;
+}
+
+@keyframes slideRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================
+FLOATING TEXT
+========================= */
+
+.text-float {
+  animation: textFloat 3s ease-in-out infinite;
+}
+
+@keyframes textFloat {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* =========================
+GLOW TEXT
+========================= */
+
+.text-glow {
+  color: var(--primary);
+
+  text-shadow:
+    0 0 6px var(--primary),
+    0 0 14px var(--primary);
+}
+
+/* =========================
+WAVE TEXT
+========================= */
+
+.text-wave span {
+  display: inline-block;
+
+  animation: wave 1.4s infinite;
+}
+
+.text-wave span:nth-child(2) {
+  animation-delay: 0.1s;
+}
+.text-wave span:nth-child(3) {
+  animation-delay: 0.2s;
+}
+.text-wave span:nth-child(4) {
+  animation-delay: 0.3s;
+}
+.text-wave span:nth-child(5) {
+  animation-delay: 0.4s;
+}
+.text-wave span:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+@keyframes wave {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+/* =========================
+GRADIENT TEXT
+========================= */
+
+.text-gradient {
+  background: linear-gradient(
+    90deg,
+    var(--primary),
+    var(--secondary),
+    var(--accent)
+  );
+
+  -webkit-background-clip: text;
+
+  color: transparent;
+}
+
+.top-nav{
+display:flex;
+align-items:center;
+justify-content:space-between;
+
+padding:12px 20px;
+
+background:#0f172a;
+color:white;
+
+position:sticky;
+top:0;
+z-index:100;
+}
+
+.nav-links a{
+margin:0 10px;
+text-decoration:none;
+color:#cbd5f5;
+font-weight:500;
+}
+
+.nav-links a:hover{
+color:white;
+}

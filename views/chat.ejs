@@ -1,0 +1,1856 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StudyMate AI</title>
+
+    <style>
+        /* =========================
+THEME VARIABLES
+========================= */
+
+        :root {
+            --bg: #f5f6f8;
+            --text: #222;
+            --card: #fff;
+
+            --primary: #63d4c3;
+            --secondary: #c7c6ff;
+            --accent: #ffd8a8;
+            --success: #d9f2c9;
+            --danger: #ffb3b3;
+
+            --border: #1f1f1f;
+
+            --radius: 14px;
+            --radius-sm: 8px;
+
+            --shadow: 5px 5px 0 var(--border);
+            --shadow-lg: 8px 8px 0 var(--border);
+        }
+
+        /* =========================
+BODY
+========================= */
+
+        body {
+            margin: 0;
+            font-family: Segoe UI, system-ui;
+            background: var(--bg);
+            color: var(--text);
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* =========================
+CHAT
+========================= */
+
+        .chat-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            padding-bottom: 120px;
+        }
+
+        /* =========================
+CHAT BUBBLES
+========================= */
+
+        .chat-bubble {
+            max-width: 75%;
+            padding: 14px;
+
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+
+            box-shadow: var(--shadow);
+            background: var(--card);
+
+            animation: fadeIn .3s ease;
+        }
+
+        .chat-user {
+            align-self: flex-end;
+            background: var(--primary);
+        }
+
+        .chat-ai {
+            align-self: flex-start;
+        }
+
+        /* =========================
+AI TEXT
+========================= */
+
+        .ai-text {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .ai-text table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ai-text td {
+            border: 1px solid #ddd;
+            padding: 6px;
+        }
+
+        /* =========================
+RESULT CARDS
+========================= */
+
+        .result-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+
+        .result-card {
+
+            min-width: 220px;
+
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+
+            background: var(--card);
+
+            padding: 12px;
+
+            box-shadow: var(--shadow);
+            transition: .2s;
+        }
+
+        .result-card:hover {
+            transform: translate(-3px, -3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .result-card img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        /* =========================
+FLASHCARD
+========================= */
+
+        .flashcard {
+            width: 100%;
+            height: 150px;
+            perspective: 900px;
+        }
+
+        .flashcard-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 12px;
+            width: 100%;
+        }
+
+        .flashcard-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform .6s;
+            transform-style: preserve-3d;
+        }
+
+        .flashcard.flip .flashcard-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flashcard-front,
+        .flashcard-back {
+
+            position: absolute;
+            inset: 0;
+
+            padding: 12px;
+
+            border: 2px solid var(--border);
+            border-radius: var(--radius);
+
+            background: var(--card);
+            box-shadow: var(--shadow);
+
+            backface-visibility: hidden;
+
+            overflow-y: auto;
+            word-wrap: break-word;
+            white-space: normal;
+
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .flashcard-back {
+            transform: rotateY(180deg);
+            background: var(--accent);
+        }
+
+        /* =========================
+INPUT AREA
+========================= */
+        .ai-text table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .chat-input {
+            position: sticky;
+            bottom: 20px;
+
+            margin: 10px auto;
+            width: 90%;
+            max-width: 900px;
+
+            display: flex;
+            gap: 8px;
+
+            padding: 10px 12px;
+
+            background: white;
+
+            border: 2px solid var(--border);
+            border-radius: 40px;
+
+            box-shadow: var(--shadow-lg);
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-size: 14px;
+        }
+
+        .chat-input button {
+            border-radius: 30px;
+        }
+
+        button {
+            padding: 10px 16px;
+
+            border: 2px solid var(--border);
+            border-radius: var(--radius-sm);
+
+            background: white;
+            cursor: pointer;
+
+            box-shadow: 3px 3px 0 var(--border);
+        }
+
+        /* =========================
+IMAGE PREVIEW MODAL
+========================= */
+
+        .img-preview {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, .8);
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            z-index: 1000;
+        }
+
+        .img-preview img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            border: 3px solid white;
+        }
+
+        /* =========================
+UPLOAD PREVIEW
+========================= */
+
+        .preview {
+            display: flex;
+            gap: 8px;
+            padding: 10px;
+        }
+
+        .preview img {
+            height: 60px;
+            border-radius: 6px;
+        }
+
+        /* =========================
+TYPING DOTS
+========================= */
+
+        .typing {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing span {
+            width: 6px;
+            height: 6px;
+            background: #777;
+            border-radius: 50%;
+            animation: blink 1.4s infinite;
+        }
+
+        .typing span:nth-child(2) {
+            animation-delay: .2s;
+        }
+
+        .typing span:nth-child(3) {
+            animation-delay: .4s;
+        }
+
+        @keyframes blink {
+
+            0%,
+            80%,
+            100% {
+                opacity: .2
+            }
+
+            40% {
+                opacity: 1
+            }
+        }
+
+        .ai-text p {
+            margin: 6px 0;
+        }
+
+        .ai-text ul,
+        .ai-text ol {
+            margin: 6px 0 6px 18px;
+        }
+
+        .ai-text table {
+            margin-top: 6px;
+        }
+
+
+        .ai-result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .ai-result-card {
+            background: #fff;
+            padding: 14px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: 0.2s;
+        }
+
+        .ai-result-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .ai-result-card h4 {
+            margin: 0 0 6px;
+            font-size: 16px;
+        }
+
+        .ai-result-card p {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .ai-result-card a {
+            font-size: 12px;
+            color: #4a7cff;
+            text-decoration: none;
+        }
+
+        .result-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .search-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .search-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 6px 14px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            transition: .2s;
+            gap: 10px;
+        }
+
+        .search-card p {
+            font-size: 14px;
+            line-height: 1.4;
+            max-height: 60px;
+            overflow: hidden;
+        }
+
+        .search-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .search-image {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .search-card h4 {
+            margin: 10px 12px 4px;
+            font-size: 16px;
+        }
+
+        .search-preview {
+            margin: 0 12px 8px;
+            font-size: 13px;
+            opacity: .85;
+        }
+
+        .search-source {
+            margin: 0 12px;
+            font-size: 11px;
+            opacity: .6;
+        }
+
+        .search-actions {
+            display: flex;
+            gap: 8px;
+            padding: 10px 12px 12px;
+        }
+
+        .search-actions a,
+        .search-actions button {
+            flex: 1;
+            padding: 6px;
+            border-radius: 6px;
+            border: none;
+            background: #4a7cff;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .result-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, .5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .result-popup-box {
+            background: white;
+            width: 650px;
+            max-height: 80vh;
+            overflow: auto;
+            padding: 24px;
+            border-radius: 16px;
+            position: relative;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            border: none;
+            background: none;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .popup-image {
+            width: 100%;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .image-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+
+        .image-card img {
+            width: 100%;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .image-card img {
+            transition: .2s;
+        }
+
+        .image-card img:hover {
+            transform: scale(1.05);
+        }
+
+        /* =========================
+LAYOUT
+========================= */
+
+        body {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            flex-shrink: 0;
+        }
+
+        .sidebar.closed {
+            width: 0;
+            border: none;
+        }
+
+        .main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            margin-left: 260px;
+            height: 100vh;
+        }
+
+        .sidebar {
+
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            width: 260px;
+
+            background: white;
+
+            border-right: 2px solid var(--border);
+
+            display: flex;
+            flex-direction: column;
+
+            z-index: 10;
+
+            transition: .3s;
+        }
+
+        .sidebar.closed {
+            transform: translateX(-260px);
+        }
+
+        .sidebar-header {
+
+            display: flex;
+            gap: 10px;
+            align-items: center;
+
+            padding: 12px;
+
+            border-bottom: 2px solid var(--border);
+
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            left: 10px;
+            top: 10px;
+            z-index: 2000;
+            background: #fff;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .subject-list {
+
+            flex: 1;
+            overflow: auto;
+            padding: 10px;
+
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+        }
+
+        /* SUBJECT */
+
+        .subject {
+
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+
+            box-shadow: var(--shadow);
+
+        }
+
+        .subject-title {
+
+            padding: 8px;
+            background: var(--secondary);
+
+            cursor: pointer;
+
+            font-weight: 600;
+
+        }
+
+        /* CHAT ITEMS */
+
+        .chat-list {
+
+            display: flex;
+            flex-direction: column;
+
+        }
+
+        .chat-item {
+
+            padding: 8px;
+
+            border-top: 1px solid #eee;
+
+            cursor: pointer;
+
+            font-size: 13px;
+
+        }
+
+        .chat-item:hover {
+
+            background: #f3f3f3;
+
+        }
+
+        .new-chat {
+
+            padding: 6px;
+            text-align: center;
+
+            background: var(--primary);
+
+            cursor: pointer;
+
+            border-top: 2px solid var(--border);
+
+            font-size: 13px;
+
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .video-card {
+            cursor: pointer;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: 0.2s;
+        }
+
+        .video-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .video-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .video-title {
+            padding: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        .show-more-btn {
+            margin-top: 10px;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: #4f7cff;
+            color: white;
+            font-size: 13px;
+        }
+
+        .video-player {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%;
+        }
+
+        .video-player iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+
+        /* =========================
+ANIMATION
+========================= */
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px)
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0)
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div id="sidebar" class="sidebar">
+        <div class="sidebar-header">
+            <b>StudyMate</b>
+        </div>
+        <div id="subjectList" class="subject-list"></div>
+    </div>
+
+    <div class="main">
+        <div id="chatContainer" class="chat-container"></div>
+    </div>
+
+    <div id="preview" class="preview"></div>
+
+    <form id="chatForm" class="chat-input" enctype="multipart/form-data">
+
+        <input id="messageInput" name="message" placeholder="Ask something..." />
+
+        <input type="file" id="imageInput" name="image" accept="image/*" hidden>
+        <input type="file" id="pdfInput" name="pdf" accept="application/pdf" hidden>
+
+        <button type="button" onclick="imageInput.click()">📷</button>
+        <button type="button" onclick="pdfInput.click()">📄</button>
+
+        <button type="submit">Send</button>
+
+    </form>
+
+    <script>
+
+        /* =========================
+        ELEMENTS
+        ========================= */
+
+        const chat = document.getElementById("chatContainer")
+        const form = document.getElementById("chatForm")
+        const input = document.getElementById("messageInput")
+        const preview = document.getElementById("preview")
+        const imageInput = document.getElementById("imageInput")
+        const pdfInput = document.getElementById("pdfInput")
+
+        let typingBubble = null
+
+        /* =========================
+        USER BUBBLE
+        ========================= */
+
+        function addUserBubble(text) {
+
+            const bubble = document.createElement("div")
+            bubble.className = "chat-bubble chat-user"
+            bubble.textContent = text
+
+            chat.appendChild(bubble)
+            chat.scrollTop = chat.scrollHeight
+
+        }
+
+        /* =========================
+        TYPING
+        ========================= */
+
+        function showTyping() {
+
+            typingBubble = document.createElement("div")
+            typingBubble.className = "chat-bubble chat-ai"
+
+            typingBubble.innerHTML =
+                `<div class="typing">
+<span></span><span></span><span></span>
+</div>`
+
+            chat.appendChild(typingBubble)
+
+        }
+
+        /* =========================
+        REMOVE TYPING
+        ========================= */
+
+        function removeTyping() {
+
+            if (typingBubble) {
+                typingBubble.remove()
+                typingBubble = null
+            }
+
+        }
+
+        /* =========================
+        AI BUBBLE
+        ========================= */
+
+        function addAIBubble(data) {
+
+            const bubble = document.createElement("div")
+            bubble.className = "chat-bubble chat-ai"
+
+            const text = document.createElement("div")
+            text.className = "ai-text"
+
+            const cleanText = cleanAIText(data.reply || "")
+            renderAIText(text, cleanText)
+
+            bubble.appendChild(text)
+
+            /* RESULTS */
+
+            if (data.results && data.results.length) {
+
+                data.results.forEach(block => {
+
+                    if (block.type === "images") {
+
+                        const imgRow = renderImageCards(block.results || [])
+                        bubble.appendChild(imgRow)
+
+                    }
+
+                    if (block.type === "search") {
+
+                        const results = renderSearchResults(block.results || [])
+                        bubble.appendChild(results)
+
+                    }
+
+                    if (block.type === "flashcard") {
+
+                        bubble.appendChild(renderFlashcard(block.flashcard || block))
+
+                    }
+
+                    if (block.type === "task") {
+
+                        bubble.appendChild(renderTask(block.task))
+
+                    }
+
+                    if (block.type === "video") {
+
+                        const videos = renderVideoCards(block.results || [])
+                        bubble.appendChild(videos)
+
+                    }
+
+                })
+
+            }
+
+            chat.appendChild(bubble)
+            chat.scrollTop = chat.scrollHeight
+        }
+        /* =========================
+        TYPE AI TEXT
+        ========================= */
+
+        function typeAIText(container, text) {
+
+            let i = 0
+
+            function step() {
+
+                if (i >= text.length) {
+                    renderAIText(container, text)
+                    return
+                }
+
+                container.innerText = text.slice(0, i)
+                i++
+
+                requestAnimationFrame(step)
+
+            }
+
+            step()
+
+        }
+
+        /* =========================
+        IMAGE CARDS
+        ========================= */
+
+        function renderImageCards(images) {
+
+            const wrapper = document.createElement("div")
+
+            const grid = document.createElement("div")
+            grid.className = "image-grid"
+
+            const max = 4
+            const visible = images.slice(0, max)
+
+            visible.forEach(img => {
+
+                const preview = img.preview || img.image
+                const full = img.image || img.preview
+
+                if (!preview) return
+
+                const card = document.createElement("div")
+                card.className = "image-card"
+
+                const image = document.createElement("img")
+                image.src = preview
+                image.loading = "lazy"
+
+                image.onclick = () => openImagePopup(full)
+
+                card.appendChild(image)
+                grid.appendChild(card)
+
+            })
+
+            wrapper.appendChild(grid)
+
+            if (images.length > max) {
+
+                const btn = document.createElement("button")
+                btn.textContent = "Show All"
+
+                btn.onclick = () => {
+
+                    grid.innerHTML = ""
+
+                    images.forEach(img => {
+
+                        const preview = img.preview || img.image
+                        const full = img.image || img.preview
+
+                        const card = document.createElement("div")
+                        card.className = "image-card"
+
+                        const image = document.createElement("img")
+                        image.src = preview
+
+                        image.onclick = () => openImagePopup(full)
+
+                        card.appendChild(image)
+                        grid.appendChild(card)
+
+                    })
+
+                    btn.remove()
+
+                }
+
+                wrapper.appendChild(btn)
+
+            }
+
+            return wrapper
+
+        }
+
+        /* =========================
+        IMAGE PREVIEW
+        ========================= */
+
+        function openImagePreview(src) {
+
+            const modal = document.createElement("div")
+            modal.className = "img-preview"
+
+            modal.innerHTML = `<img src="${src}">`
+
+            modal.onclick = () => modal.remove()
+
+            document.body.appendChild(modal)
+
+        }
+
+        function openImagePopup(url) {
+
+            const overlay = document.createElement("div")
+            overlay.className = "result-popup"
+
+            overlay.innerHTML = `
+            <div class="popup-box">
+              <button class="popup-close">✕</button>
+              <img src="${url}">
+            </div>
+        `
+
+            overlay.querySelector(".popup-close").onclick = () => overlay.remove()
+
+            document.body.appendChild(overlay)
+        }
+
+        /* =========================
+        FLASHCARD
+        ========================= */
+
+        function renderFlashcard(data) {
+
+            if (!data) return document.createElement("div")
+
+            const question =
+                data.question ||
+                data.front ||
+                data.q ||
+                ""
+
+            const answer =
+                data.answer ||
+                data.back ||
+                data.a ||
+                ""
+
+            if (!question && !answer) return document.createElement("div")
+
+            const card = document.createElement("div")
+            card.className = "flashcard"
+
+            const inner = document.createElement("div")
+            inner.className = "flashcard-inner"
+
+            const front = document.createElement("div")
+            front.className = "flashcard-front"
+            front.innerHTML = `<b>Question</b><br><br>${escapeHTML(question)}`
+
+            const back = document.createElement("div")
+            back.className = "flashcard-back"
+            back.innerHTML = `<b>Answer</b><br><br>${escapeHTML(answer)}`
+
+            inner.appendChild(front)
+            inner.appendChild(back)
+
+            card.appendChild(inner)
+
+            card.onclick = () => card.classList.toggle("flip")
+
+            return card
+        }
+        function escapeHTML(str) {
+            return str
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+        }
+
+        /* =========================
+        TASK
+        ========================= */
+
+        function renderTask(task) {
+
+            const card = document.createElement("div")
+            card.className = "result-card"
+
+            const steps = Object.values(task.steps || {})
+
+            card.innerHTML = `
+
+            <b>📋 ${task.title}</b>
+
+            <div style="margin-top:6px;font-size:13px">
+
+            ${steps.map(s => "• " + s.title).join("<br>")}
+
+            </div>
+`
+
+            return card
+
+        }
+
+        /* =========================
+        UPLOAD PREVIEW
+        ========================= */
+
+        imageInput.onchange = () => {
+
+            preview.innerHTML = ""
+
+            const file = imageInput.files[0]
+
+            if (!file) return
+
+            const img = document.createElement("img")
+            img.src = URL.createObjectURL(file)
+
+            preview.appendChild(img)
+
+        }
+
+        pdfInput.onchange = () => {
+
+            preview.innerHTML = ""
+
+            const file = pdfInput.files[0]
+
+            if (!file) return
+
+            preview.innerHTML = "📄 " + file.name
+
+        }
+
+        /* =========================
+        SEND MESSAGE
+        ========================= */
+
+        form.addEventListener("submit", async (e) => {
+
+            e.preventDefault()
+
+            const message = input.value.trim()
+
+            if (!message && !imageInput.files[0] && !pdfInput.files[0]) return
+
+            addUserBubble(message)
+
+            showTyping()
+
+            const formData = new FormData()
+
+            formData.append("message", message)
+
+            if (imageInput.files[0]) {
+                formData.append("image", imageInput.files[0])
+            }
+
+            if (pdfInput.files[0]) {
+                formData.append("pdf", pdfInput.files[0])
+            }
+
+            input.value = ""
+            preview.innerHTML = ""
+
+            formData.append("subjectId", currentSubject)
+            formData.append("chatId", currentChat)
+
+            const res = await fetch("/chat/send", {
+                method: "POST",
+                body: formData
+            })
+            const data = await res.json()
+
+            removeTyping()
+
+            addAIBubble(data)
+
+            imageInput.value = ""
+            pdfInput.value = ""
+
+        })
+
+        /* =========================
+        MARKDOWN RENDERER
+        ========================= */
+        function cleanAIText(text) {
+
+            const lines = text.split("\n")
+
+            let cleaned = []
+            let seenTable = false
+
+            for (let line of lines) {
+
+                const trimmed = line.trim()
+
+                // detect markdown table
+                if (trimmed.startsWith("|") && trimmed.includes("|")) {
+                    seenTable = true
+                    cleaned.push(line)
+                    continue
+                }
+
+                // detect fallback table
+                if (seenTable && trimmed.includes("\t")) {
+                    continue
+                }
+
+                cleaned.push(line)
+
+            }
+
+            return cleaned.join("\n")
+
+        }
+
+        function renderAIText(container, text) {
+
+            const lines = text.split("\n")
+
+            let list = null
+            let table = null
+
+            lines.forEach(line => {
+
+                line = line.trim()
+
+                if (!line) { list = null; table = null; return }
+
+                /* heading */
+
+                if (line.startsWith("#")) {
+
+                    const level = line.match(/^#+/)[0].length
+
+                    const h = document.createElement("h" + Math.min(level, 4))
+                    h.textContent = line.replace(/^#+\s*/, "")
+
+                    container.appendChild(h)
+                    return
+
+                }
+
+                /* list */
+
+                /* bullet list */
+
+                if (/^[\-\*\•]\s+/.test(line)) {
+
+                    if (!list) {
+                        list = document.createElement("ul")
+                        container.appendChild(list)
+                    }
+
+                    const li = document.createElement("li")
+                    li.textContent = line.replace(/^[\-\*\•]\s+/, "")
+
+                    list.appendChild(li)
+                    return
+                }
+
+                /* numbered list */
+
+                if (/^\d+\.\s+/.test(line)) {
+
+                    if (!list || list.tagName !== "OL") {
+                        list = document.createElement("ol")
+                        container.appendChild(list)
+                    }
+
+                    const li = document.createElement("li")
+                    li.textContent = line.replace(/^\d+\.\s+/, "")
+
+                    list.appendChild(li)
+                    return
+                }
+
+                /* table */
+
+                if (line.includes("|")) {
+
+                    // ignore markdown separator rows
+                    if (/^\|\s*-+/.test(line)) return;
+
+                    if (!table) {
+
+                        table = document.createElement("table")
+                        table.style.width = "100%"
+                        table.style.borderCollapse = "collapse"
+
+                        container.appendChild(table)
+
+                    }
+
+                    const tr = document.createElement("tr")
+
+                    line.split("|")
+                        .map(c => c.trim())
+                        .filter(Boolean)
+                        .forEach((cell) => {
+
+                            const el = document.createElement(
+                                table.rows.length === 0 ? "th" : "td"
+                            )
+
+                            el.textContent = cell
+                            el.style.border = "1px solid #ddd"
+                            el.style.padding = "6px"
+
+                            tr.appendChild(el)
+
+                        })
+
+                    table.appendChild(tr)
+                    return
+                }
+                /* paragraph */
+
+                const p = document.createElement("p")
+                p.textContent = line
+                container.appendChild(p)
+
+            })
+
+        }
+
+        function renderSearchResults(items) {
+
+            const grid = document.createElement("div")
+            grid.className = "search-grid"
+
+            items.forEach(item => {
+
+                const title =
+                    item.title ||
+                    item.name ||
+                    "Result"
+
+                const preview =
+                    item.preview ||
+                    item.snippet ||
+                    item.description ||
+                    ""
+
+                const image =
+                    item.image ||
+                    item.thumbnail ||
+                    item.thumbnailUrl ||
+                    ""
+
+                const url =
+                    item.url ||
+                    item.link ||
+                    "#"
+
+                const source =
+                    item.source ||
+                    item.domain ||
+                    ""
+
+                const card = document.createElement("div")
+                card.className = "search-card"
+                card.draggable = true
+
+                card.addEventListener("dragstart", e => {
+
+                    const payload = `
+                    Summarize this information:
+                    ${title}
+                    ${preview}
+                    `
+                    e.dataTransfer.setData("text/plain", payload)
+                })
+
+                if (image) {
+
+                    const img = document.createElement("img")
+                    img.src = image
+                    img.className = "search-image"
+                    card.appendChild(img)
+
+                }
+
+                const h = document.createElement("h4")
+                h.textContent = title
+                card.appendChild(h)
+
+                const p = document.createElement("p")
+                p.className = "search-preview"
+                p.textContent = preview
+                card.appendChild(p)
+
+                if (source) {
+
+                    const s = document.createElement("div")
+                    s.className = "search-source"
+                    s.textContent = source
+                    card.appendChild(s)
+
+                }
+
+                const actions = document.createElement("div")
+                actions.className = "search-actions"
+
+                const open = document.createElement("a")
+                open.href = url
+                open.target = "_blank"
+                open.textContent = "Open"
+
+                const more = document.createElement("button")
+                more.textContent = "Read More"
+
+                more.onclick = () =>
+                    openResultPopup({
+                        title,
+                        image,
+                        preview,
+                        url
+                    })
+
+                actions.appendChild(open)
+                actions.appendChild(more)
+
+                card.appendChild(actions)
+
+                grid.appendChild(card)
+
+            })
+
+            input.addEventListener("dragover", e => {
+                e.preventDefault()
+            })
+
+            input.addEventListener("drop", e => {
+                e.preventDefault()
+
+                const text = e.dataTransfer.getData("text/plain")
+
+                input.value += "\n\n" + text
+            })
+
+            return grid
+        }
+
+        function openResultPopup(item) {
+
+            const overlay = document.createElement("div")
+            overlay.className = "result-popup"
+
+            const box = document.createElement("div")
+            box.className = "result-popup-box"
+
+            const close = document.createElement("button")
+            close.className = "popup-close"
+            close.textContent = "✕"
+
+            close.onclick = () => overlay.remove()
+
+            const title = document.createElement("h2")
+            title.textContent = item.title
+
+            const img = document.createElement("img")
+            if (item.image) {
+                img.src = item.image
+                img.className = "popup-image"
+            }
+
+            const text = document.createElement("p")
+            text.textContent = item.fullText || item.preview || ""
+
+            const link = document.createElement("a")
+            link.href = item.url
+            link.target = "_blank"
+            link.textContent = "Open Full Article"
+
+            box.appendChild(close)
+            box.appendChild(title)
+
+            if (item.image) box.appendChild(img)
+
+            box.appendChild(text)
+            box.appendChild(link)
+
+            overlay.appendChild(box)
+
+            document.body.appendChild(overlay)
+
+        }
+
+        /* =========================
+SIDEBAR STATE
+========================= */
+
+        let currentSubject = null
+        let currentChat = null
+
+        function toggleSidebar() {
+
+            const sidebar = document.getElementById("sidebar")
+            const main = document.querySelector(".main")
+
+            sidebar.classList.toggle("closed")
+
+            if (sidebar.classList.contains("closed")) {
+                main.style.marginLeft = "0px"
+            } else {
+                main.style.marginLeft = "260px"
+            }
+
+        }
+
+        /* =========================
+        LOAD SUBJECTS
+        ========================= */
+
+        async function loadSubjects() {
+
+            const res = await fetch("/chat/subjects")
+            const data = await res.json()
+
+            renderSubjects(data.subjects)
+
+            if (data.subjects.length) {
+
+                const first = data.subjects[0]
+                currentSubject = first.subjectId
+
+            }
+
+        }
+        /* =========================
+        RENDER SUBJECTS
+        ========================= */
+
+        function renderSubjects(subjects) {
+
+            const container = document.getElementById("subjectList")
+            container.innerHTML = ""
+
+            subjects.forEach((sub, index) => {
+
+                const block = document.createElement("div")
+                block.className = "subject"
+
+                const title = document.createElement("div")
+                title.className = "subject-title"
+                title.textContent = sub.name
+
+                const chatList = document.createElement("div")
+                chatList.className = "chat-list"
+
+                title.onclick = () => loadChats(sub.subjectId, chatList)
+
+                block.appendChild(title)
+                block.appendChild(chatList)
+
+                container.appendChild(block)
+
+                if (index === 0) {
+                    loadChats(sub.subjectId, chatList)
+                }
+
+            })
+
+        }
+
+        /* =========================
+        LOAD CHATS
+        ========================= */
+
+        async function loadChats(subjectId, container) {
+
+            currentSubject = subjectId
+
+            const res = await fetch("/chat/" + subjectId)
+            const chats = await res.json()
+
+            container.innerHTML = ""
+
+            chats.forEach(chat => {
+
+                const item = document.createElement("div")
+                item.className = "chat-item"
+                item.textContent = chat.title
+
+                item.onclick = () => {
+
+                    currentChat = chat.chatId
+
+                    loadChatHistory(subjectId, chat.chatId)
+
+                }
+
+                container.appendChild(item)
+
+            })
+
+            /* NEW CHAT BUTTON */
+
+            const newChat = document.createElement("div")
+            newChat.className = "new-chat"
+            newChat.textContent = "+ New Chat"
+
+            newChat.onclick = () => createChat(subjectId, container)
+
+            container.appendChild(newChat)
+
+        }
+
+        /* =========================
+        CREATE CHAT
+        ========================= */
+
+        async function createChat(subjectId, container) {
+
+            const title = prompt("Chat title") || "New Chat"
+
+            const res = await fetch("/chat/create", {
+
+                method: "POST",
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    subjectId,
+                    title
+                })
+
+            })
+
+            const chat = await res.json()
+
+            loadChats(subjectId, container)
+
+            currentChat = chat.chatId
+            chat.innerHTML = ""
+            showWelcome()
+
+        }
+
+        document.addEventListener("mouseup", () => {
+
+            const selection = window.getSelection().toString().trim()
+
+            if (!selection) return
+
+            const box = document.createElement("div")
+
+            box.style.position = "fixed"
+            box.style.bottom = "80px"
+            box.style.right = "20px"
+            box.style.padding = "8px 12px"
+            box.style.background = "white"
+            box.style.border = "2px solid #000"
+            box.style.borderRadius = "8px"
+            box.style.cursor = "pointer"
+            box.style.zIndex = "9999"
+
+            box.textContent = "Ask AI"
+
+            box.onclick = () => {
+
+                input.value = `Explain this:\n\n${selection}`
+
+                box.remove()
+
+            }
+
+            document.body.appendChild(box)
+
+            setTimeout(() => box.remove(), 4000)
+
+        })
+
+        async function loadChatHistory(subjectId, chatId) {
+
+            const res = await fetch(`/chat/history/${subjectId}/${chatId}`)
+
+            const data = await res.json()
+
+            chat.innerHTML = ""
+
+            if (!data.messages || data.messages.length === 0) {
+
+                showWelcome()
+
+                return
+
+            }
+
+            data.messages.forEach(m => {
+
+                if (m.role === "user") {
+
+                    addUserBubble(m.content)
+
+                }
+
+                if (m.role === "assistant") {
+
+                    addAIBubble({
+                        reply: m.content,
+                        results: []
+                    })
+
+                }
+
+            })
+
+        }
+
+        function renderVideoCards(videos) {
+
+            const wrapper = document.createElement("div")
+
+            const grid = document.createElement("div")
+            grid.className = "video-grid"
+
+            const MAX = 4
+            const visible = videos.slice(0, MAX)
+
+            function createCard(v) {
+
+                const card = document.createElement("div")
+                card.className = "video-card"
+
+                const thumb = document.createElement("img")
+                thumb.src = v.thumbnail
+                thumb.loading = "lazy"
+
+                const title = document.createElement("div")
+                title.className = "video-title"
+                title.textContent = v.title
+
+                card.appendChild(thumb)
+                card.appendChild(title)
+
+                card.onclick = () => {
+                    window.open(v.url, "_blank")
+                }
+
+                return card
+            }
+
+            visible.forEach(v => grid.appendChild(createCard(v)))
+
+            wrapper.appendChild(grid)
+
+            if (videos.length > MAX) {
+
+                const btn = document.createElement("button")
+                btn.className = "show-more-btn"
+                btn.textContent = "Show All Videos"
+
+                btn.onclick = () => {
+
+                    grid.innerHTML = ""
+
+                    videos.forEach(v => {
+                        grid.appendChild(createCard(v))
+                    })
+
+                    btn.remove()
+                }
+
+                wrapper.appendChild(btn)
+            }
+
+            return wrapper
+        }
+
+        function openVideoPopup(videoId) {
+
+            const overlay = document.createElement("div")
+            overlay.className = "result-popup"
+
+            const box = document.createElement("div")
+            box.className = "result-popup-box"
+
+            const close = document.createElement("button")
+            close.className = "popup-close"
+            close.textContent = "✕"
+
+            close.onclick = () => overlay.remove()
+
+            const player = document.createElement("div")
+            player.className = "video-player"
+
+            player.innerHTML = `
+             <iframe 
+                    src="https://www.youtube.com/embed/${videoId}"
+                 frameborder="0"
+                 allowfullscreen>
+                </iframe>
+                `
+
+            box.appendChild(close)
+            box.appendChild(player)
+
+            overlay.appendChild(box)
+
+            document.body.appendChild(overlay)
+
+        }
+        function showWelcome() {
+
+            const box = document.createElement("div")
+
+            box.style.margin = "auto"
+            box.style.textAlign = "center"
+            box.style.opacity = ".7"
+
+            box.innerHTML = `
+
+            <h2>StudyMate AI</h2>
+
+            <p>Ask questions, research topics, or create flashcards.</p>
+
+            <div style="margin-top:12px">
+
+            <button onclick="quickPrompt('Explain this subject')">Explain</button>
+            <button onclick="quickPrompt('Create flashcards')">Flashcards</button>
+            <button onclick="quickPrompt('Make a study plan')">Study Plan</button>
+
+            </div>
+`
+
+            chat.appendChild(box)
+
+        }
+
+        function quickPrompt(text) {
+
+            input.value = text
+            input.focus()
+
+        }
+        loadSubjects()
+
+    </script>
+
+</body>
+
+</html>

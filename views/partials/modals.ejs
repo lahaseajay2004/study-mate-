@@ -1,0 +1,196 @@
+<style>
+    .modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.6);
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-box {
+  background: var(--panel);
+  padding: 20px;
+  border-radius: 12px;
+  width: 360px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modal-box input,
+.modal-box textarea {
+  background: #222;
+  border: none;
+  padding: 8px;
+  color: white;
+  border-radius: 6px;
+}
+
+.modal-box select,
+.modal-box input[type="number"] {
+  background: #222;
+  border: none;
+  padding: 8px;
+  color: white;
+  border-radius: 6px;
+}
+
+.mini-label {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 8px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+
+</style>
+<div class="modal" id="subjectModal">
+  <form class="modal-box" method="POST" action="/subjects/create">
+    
+    <h3>Create Subject</h3>
+
+    <input 
+      type="text"
+      name="name" 
+      placeholder="Subject name" 
+      required 
+    />
+
+    <textarea 
+      name="description" 
+      placeholder="Short description"
+    ></textarea>
+
+    <textarea 
+      name="instructions" 
+      placeholder="Custom AI instructions (e.g. explain simply, focus on exams...)"
+    ></textarea>
+
+    <!-- AI Model -->
+    <label class="mini-label">AI Model</label>
+    <select name="model">
+      <option value="meta-llama/llama-3-8b-instruct" selected>
+        Llama 3 8B (Fast)
+      </option>
+      <option value="meta-llama/llama-3-70b-instruct">
+        Llama 3 70B (Smarter)
+      </option>
+      <option value="mistralai/mistral-7b-instruct">
+        Mistral 7B
+      </option>
+    </select>
+
+    <!-- Temperature -->
+    <label class="mini-label">Creativity (Temperature)</label>
+    <input 
+      type="number" 
+      name="temperature" 
+      min="0" 
+      max="1" 
+      step="0.1" 
+      value="0.4"
+    />
+
+    <div class="modal-actions">
+      <button type="submit" class="btn">Create</button>
+      <button type="button" class="btn ghost" onclick="closeModal('subjectModal')">
+        Cancel
+      </button>
+    </div>
+
+  </form>
+</div>
+
+<div class="modal" id="noteModal">
+  <form class="modal-box" method="POST" action="/notes/create">
+    <h3>Add Note</h3>
+
+    <!-- Show current context safely -->
+    <p class="context-info">
+      <% if (activeContext) { %>
+        Scope: <strong><%= activeContext.scope %></strong>
+
+        <% if (activeContext.subjectId) { %>
+          | Subject: <strong><%= activeContext.subjectId %></strong>
+        <% } %>
+
+        | Mode: <strong><%= activeContext.context %></strong>
+      <% } else { %>
+        Scope: <strong>global</strong> | Mode: <strong>general</strong>
+      <% } %>
+    </p>
+
+    <input 
+      type="text"
+      name="title" 
+      placeholder="Title" 
+      required 
+    />
+
+    <textarea 
+      name="content" 
+      placeholder="Write your note here..."
+      rows="5"
+    ></textarea>
+
+    <input 
+      type="text"
+      name="tags" 
+      placeholder="tags, comma, separated"
+    />
+
+    <div class="modal-actions">
+      <button type="submit" class="btn">Save Note</button>
+    </div>
+  </form>
+</div>
+
+
+
+<div class="modal" id="taskModal">
+  <form class="modal-box" method="POST" action="/planner/create">
+    <h3>Add Task</h3>
+
+    <!-- Scope Selection -->
+    <label>Scope</label>
+    <select name="scope" id="taskScope" onchange="toggleProjectSelect()">
+      <option value="global">Global</option>
+      <option value="project">Project</option>
+    </select>
+
+    <!-- Project Dropdown -->
+    <div id="projectSelect" style="display:none;">
+      <label>Project</label>
+      <select name="projectId">
+        <% projects.forEach(p => { %>
+          <option value="<%= p.projectId %>">
+            <%= p.name %>
+          </option>
+        <% }) %>
+      </select>
+    </div>
+
+    <input 
+      name="title" 
+      placeholder="Task title" 
+      required 
+    />
+
+    <button class="btn">Add</button>
+  </form>
+</div>
+
+<script>
+  function toggleProjectSelect() {
+    const scope = document.getElementById("taskScope").value;
+    const projectBox = document.getElementById("projectSelect");
+    projectBox.style.display = scope === "project" ? "block" : "none";
+  }
+</script>
+

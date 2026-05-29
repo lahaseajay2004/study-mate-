@@ -1,0 +1,27 @@
+<h2>Select Active Context</h2>
+
+<h3>Subjects</h3>
+<ul>
+  <% subjects.forEach(s => { %>
+    <li>
+      <form method="POST" action="/context/activate">
+        <input type="hidden" name="type" value="subject">
+        <input type="hidden" name="id" value="<%= s.subjectId %>">
+        <button><%= s.name %></button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
+
+<h3>Projects</h3>
+<ul>
+  <% projects.forEach(p => { %>
+    <li>
+      <form method="POST" action="/context/activate">
+        <input type="hidden" name="type" value="project">
+        <input type="hidden" name="id" value="<%= p.projectId %>">
+        <button><%= p.name %></button>
+      </form>
+    </li>
+  <% }) %>
+</ul>
